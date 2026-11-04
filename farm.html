@@ -4,8 +4,246 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Farm</title>
+    <link rel="stylesheet" href="css/farmStyles.css">
 </head>
 <body>
-    
+    <a href="#main-content">Skip to main content</a>
+
+    <header id="site-header">
+        <a href="homePage.html" aria-label="Home Page">
+            <img src="images/logo.png" alt="Farm Logo" id="logo">
+            <span>Fruit Farms PH</span>
+        </a>
+
+        <nav aria-label="Main navigation">
+            <ul>
+                <li><a href="homePage.html#hero">Home</a></li>
+                <li><a href="homePage.html#about">About</a></li>
+                <li><a href="farm.html">Farms</a></li>
+                <li><a href="homePage.html#reservations">Reservation</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content">
+        <nav aria-label="Breadcrumb">
+            <ul class="breadcrumb">
+                <li><a href="homePage.html">Home</a></li>
+                <li><a href="farm.html">Farms</a></li>
+                <li aria-current="page">Farm Name</li>
+            </ul>
+        </nav>
+
+        <article id="farm" aria-labelledby="farm-name">
+            <header>
+                <h1 id="farm-name">Farm Name</h1>
+                <p>Location: Farm Location</p>
+            </header>
+
+            <div id="farm-layout">
+                <div id="farm-primary">
+                    <section id="walkthrough" aria-labelledby="walkthrough-heading">
+                        <h2 id="walkthrough-heading">What to expect: farm walkthrough</h2>
+                        <figure>
+                            <video controls preload="metadata" poster="">
+                                <source src="" type="video/mp4">
+                                <track kind="captions" src="" srclang="en" label="English">
+                                <p>Your browser does not support video. <a href="#">Download the walkthrough</a>.</p>
+                            </video>
+                            <figcaption>Walkthrough of the farm, from entrance to harvest area.</figcaption>
+                        </figure>
+                    </section>
+
+                    <section id="gallery" aria-labelledby="gallery-heading">
+                        <h2 id="gallery-heading">Photos</h2>
+                        <ul>
+                            <li>
+                                <figure>
+                                <img src="" alt="Description of photo">
+                                <figcaption>Caption</figcaption>
+                                </figure>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section id="activities" aria-labelledby="activities-heading">
+                        <h2 id="activities-heading">Activities</h2>
+                        <ul>
+                            <li>Activity 1</li>
+                            <li>Activity 2</li>
+                            <li>Activity 3</li>
+                        </ul>
+                    </section>
+
+                    <section id="booking" aria-labelledby="booking-heading">
+                        <h2 id="booking-heading">Book a visit</h2>
+                        <p>Your request will be sent to the farm administrator for confirmation.</p>
+
+                        <form id="booking-form" action="#" method="post">
+                            <fieldset>
+                                <legend>Your details</legend>
+
+                                <p>
+                                    <label for="book-name">Full name</label>
+                                    <input type="text" id="book-name" name="name" autocomplete="name" required>
+                                </p>
+                                <p>
+                                    <label for="book-email">Email</label>
+                                    <input type="email" id="book-email" name="email" autocomplete="email" required>
+                                </p>
+                                <p>
+                                    <label for="book-phone">Mobile number</label>
+                                    <input type="tel" id="book-phone" name="phone" autocomplete="tel" required>
+                                </p>
+                            </fieldset>
+
+                            <fieldset>
+                                <legend>Visit details</legend>
+
+                                <p>
+                                    <label for="book-date">Preferred date</label>
+                                    <input type="date" id="book-date" name="date" required>
+                                </p>
+                                <p>
+                                    <label for="book-time">Preferred time</label>
+                                    <input type="time" id="book-time" name="time" required>
+                                </p>
+                                <p>
+                                    <label for="book-people">Number of people</label>
+                                    <input type="number" id="book-people" name="people" min="1" required>
+                                </p>
+                            </fieldset>
+
+                            <button type="submit">Send booking request</button>
+                            <p id="booking-status" role="status" aria-live="polite"></p>
+                        </form>
+                    </section>
+
+                    <section id="ask" aria-labelledby="ask-heading">
+                        <h2 id="ask-heading">Ask a question</h2>
+                        <p>Our assistant answers right away. If it can't help, your question goes to the farm administrator.</p>
+
+                        <div id="chat-log" role="log" aria-live="polite" aria-label="Conversation">
+                            <p><strong>Assistant:</strong> Hello! How can I help you today?</p>
+                        </div>
+
+                        <form id="chat-form" action="#" method="post">
+                            <label for="chat-input">Your question</label>
+                            <input type="text" id="chat-input" name="question" required>
+                            <button type="submit">Send</button>
+                        </form>
+
+                        <p id="handoff-notice" role="status" hidden>
+                            Your question was sent to the farm administrator. They will reply by email.
+                        </p>
+                    </section>
+                </div>
+
+                <aside id="farm-info" aria-labelledby="farm-info-heading">
+                    <h2 id="farm-info-heading">Farm information</h2>
+                    
+                    <section aria-labelledby="about-farm-heading">
+                        <h3 id="about-farm-heading">About this farm</h3>
+                        <p>Brief description of the farm.</p>
+                    </section>
+
+                    <dl>
+                        <div>
+                            <dt>Location</dt>
+                            <dd>
+                                <address>Barangay, City, Province</address>
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Fruits grown</dt>
+                            <dd>
+                                <ul>
+                                    <li>Fruit name</li>
+                                </ul>
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Origin of the fruit</dt>
+                            <dd>Where the fruit variety comes from</dd>
+                        </div>
+
+                        <div>
+                            <dt>Bearing season</dt>
+                            <dd>
+                                <time datetime="2027-03">March</time> to <time datetime="2027-06">June</time>
+                            </dd>
+                        </div>
+
+                        <div>
+                            <dt>Best for</dt>
+                            <dd>Dry season / Wet season</dd>
+                        </div>
+
+                        <div>
+                            <dt>Opening hours</dt>
+                            <dd>Mon to Sun, 8:00 AM to 5:00 PM</dd>
+                        </div>
+
+                        <div>
+                            <dt>Entrance fee</dt>
+                            <dd>Amount per person</dd>
+                        </div>
+
+                        <div>
+                            <dt>Contact</dt>
+                            <dd><a href="tel:+630000000000">+63 000 000 0000</a></dd>
+                        </div>
+                    </dl>
+
+                    <!-- Google Maps redirect -->
+                    <section id="directions" aria-labelledby="directions-heading">
+                        <h3 id="directions-heading">Directions</h3>
+                        <p>See the route and how far you are from the farm.</p>
+                        <a id="maps-link"
+                        href="https://www.google.com/maps/search/?api=1&amp;query=FARM_LATITUDE,FARM_LONGITUDE"
+                        target="_blank"
+                        rel="noopener noreferrer">
+                        Open in Google Maps
+                        </a>
+                    </section>
+                </aside>
+            </div>
+        </article>
+
+        <section id="related-farms" aria-labelledby="related-heading">
+        <h2 id="related-heading">Other farms you might like</h2>
+        <ul>
+            <li>
+                <article>
+                    <a href="farm.html?id=2">
+                        <figure>
+                            <img src="" alt="Farm name entrance">
+                            <figcaption>Farm Name</figcaption>
+                        </figure>
+                        <h3>Farm Name</h3>
+                        <p>City / Province</p>
+                    </a>
+                </article>
+            </li>
+        </ul>
+        </section>
+    </main>
+
+    <footer id="site-footer">
+        <nav aria-label="Footer navigation">
+            <ul>
+                <li><a href="homePage.html#about">About</a></li>
+                <li><a href="#">Privacy policy</a></li>
+                <li><a href="#">Terms of use</a></li>
+            </ul>
+        </nav>
+        <address>
+        Contact us: <a href="mailto:hello@example.com">hello@example.com</a>
+        </address>
+        <p>&copy; 2026 SAGANA: Fruit Farms PH. All rights reserved.</p>
+    </footer>
+
 </body>
 </html>
