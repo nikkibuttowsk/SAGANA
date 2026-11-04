@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAGANA: Farm PH</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    
+    <a href="#main-content"> Skip to main content</a>
+
+    <header id="site-header">
+        <a href="homePage.html" aria-label="SAGANA: Farm PH Home">
+            <img src="" alt="SAGANA: Farm PH Logo" id="logo">
+            <span>Fruit Farms PH</span>
+        </a>
+
+        <nav aria-label="Main navigation">
+            <ul>
+                <li><a href="#hero">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#suggested-farms">Farms</a></li>
+                <li><a href="#reservations">Reservation</a></li>
+            </ul>
+        </nav>
+
+        <search>
+            <form action="farms.html" method="get" role="search">
+                <label for="site-search">Search farms</label>
+                <input type="search" id="site-search" name="q" placeholder="Fruit, farm name, or province">
+                <button type="submit">Search</button>
+            </form>
+        </search>
+    </header>
+
+    <main id="main-content">
+        <section id="hero" aria-labelledby="hero-heading">
+            <h1 id="hero-heading">Welcome to SAGANA!</h1>
+            <p>Discover the best fruit farms in the Philippines and book your visit today!</p>
+
+            <div id="hero-carousel" role="region" aria-roledescription="carousel" aria-label="Featured news and posters">
+
+                <article data-slide="1">
+                    <figure>
+                        <img src="" alt="Poster of the featured farm">
+                        <figcaption>
+                            <h2>This farm is going viral</h2>
+                            <p>Short headline summary kineme</p>
+                            <p>
+                            <time datetime="2026-10-29">October 29, 2026</time>
+                            </p>
+                            <a href="farm.html?id=1">Visit this farm</a>
+                        </figcaption>
+                    </figure>
+                </article>
+
+                <article data-slide="2">
+                    <figure>
+                        <img src="" alt="Poster of an upcoming harvest festival">
+                        <figcaption>
+                            <h2>Harvest festival poster title</h2>
+                            <p>Short description kineme</p>
+                            <p>
+                            <time datetime="2026-10-29">October 29, 2026</time>
+                            </p>
+                            <a href="farm.html?id=1">Visit this farm</a>
+                        </figcaption>
+                    </figure>
+                </article>
+
+                <button type="button" id="hero-prev" aria-label="Previous slide">Previous</button>
+                <button type="button" id="hero-next" aria-label="Next slide">Next</button>
+            </div>
+
+            <a href="#suggested-farms" class="btn">Explore Farms</a>
+        </section>
+
+        <section id="about" aria-labelledby="about-heading">
+            <h2>About SAGANA</h2>
+            <p>SAGANA is dedicated to connecting visitors with the finest fruit farms across the Philippines. Our platform allows you to explore, learn, and book visits to these farms with ease.</p>
+
+            <section id="about-team" aria-labelledby="about-team-heading">
+                <h3 id="about-team-heading">Meet the Team</h3>
+                <p>Our team is passionate about agriculture and technology, working together to bring you the best farm experiences.</p>
+                <ul>
+                    <li>
+                        <article>
+                            <figure>
+                                <img src="" alt="Photo of team member Nikki Limboc">
+                                <figcaption>
+                                    <h4>Nikki Limboc</h4>
+                                    <p>rolerolerolerole</p>
+                                </figcaption>
+                            </figure>
+                        </article>
+                    </li>
+                    <li>
+                        <article>
+                            <figure>
+                                <img src="" alt="Photo of team member Julian Carlo Magbuhat">
+                                <figcaption>
+                                    <h4>Julian Carlo Magbuhat</h4>
+                                    <p>rolerolerolerole</p>
+                                </figcaption>
+                            </figure>
+                        </article>
+                    </li>
+                    <li>
+                        <article>
+                            <figure>
+                                <img src="" alt="Photo of team member Christine Nicole Miranda">
+                                <figcaption>
+                                    <h4>Christine Nicole Miranda</h4>
+                                    <p>rolerolerolerole</p>
+                                </figcaption>
+                            </figure>
+                        </article>
+                    </li>
+                </ul>
+            </section>
+        </section>
+
+        <section id="suggested-farms" aria-labelledby="suggested-farms-heading">
+            <h2>Suggested Farms</h2>
+
+            <section id="farms-near-you" aria-labelledby="farms-near-you-heading">
+                <header>
+                    <h3 id="farms-near-you-heading">Farms Near You</h3>
+                    <p id="location-status" aria-live="polite">Allow location access to see farms near you.</p>
+                    <button type="button" id="location-button">Use My Location</button>
+                </header>
+                <ul id="nearby-farms-list">
+                    <!-- farm cards(two farms nakalagay currently)-->
+                    <li>
+                        <article>
+                            <a href="farm.html?id=1">
+                                <figure>
+                                    <img src="" alt="Farm name entrance">
+                                    <figcaption>Farm Name</figcaption>
+                                </figure>
+                                <h4>Farm Name</h4>
+                                <p>City / Province</p>
+                                <p>Fruits: Mango, Pineapple</p>
+                                <p><data value="12.5">12.5 km</data> away</p>
+                            </a>
+                        </article>
+                    </li>
+                    <li>
+                        <article>
+                            <a href="farm.html?id=2">
+                                <figure>
+                                    <img src="" alt="Farm name entrance">
+                                    <figcaption>Farm Name</figcaption>
+                                </figure>
+                                <h4>Farm Name</h4>
+                                <p>City / Province</p>
+                                <p>Fruits: Mango, Pineapple</p>
+                                <p><data value="12.5">12.5 km</data> away</p>
+                            </a>
+                        </article>
+                    </li>
+                </ul>
+            </section>
+
+            <section id="popular-farms" aria-labelledby="popular-farms-heading">
+                <h3 id="popular-farms-heading">Popular right nauw</h3>
+                <ul id="popular-farms-list">
+                    <!-- farm cards(two farms nakalagay currently)-->
+                    <li>
+                        <article>
+                            <a href="farm.html?id=3">
+                                <figure>
+                                    <img src="" alt="Farm name entrance">
+                                    <figcaption>Farm Name</figcaption>
+                                </figure>
+                                <h4>Farm Name</h4>
+                                <p>City / Province</p>
+                                <p>Fruits: Mango, Pineapple</p>
+                            </a>
+                        </article>
+                    </li>
+                    <li>
+                        <article>
+                            <a href="farm.html?id=4">
+                                <figure>
+                                    <img src="" alt="Farm name entrance">
+                                    <figcaption>Farm Name</figcaption>
+                                </figure>
+                                <h4>Farm Name</h4>
+                                <p>City / Province</p>
+                                <p>Fruits: Mango, Pineapple</p>
+                            </a>
+                        </article>
+                    </li>
+                </ul>
+            </section>
+
+            <section id="seasonal-farms" aria-labelledby="seasonal-heading">
+                <h3 id="seasonal-heading">Best for the season</h3>
+
+                <section id="wet-season-farms" aria-labelledby="wet-heading">
+                    <h4 id="wet-heading">Wet season (June to November)</h4>
+                    <ul id="wet-list">
+                        <li>
+                            <article>
+                                <a href="farm.html?id=5">
+                                    <figure>
+                                        <img src="" alt="Farm name entrance">
+                                        <figcaption>Farm Name</figcaption>
+                                    </figure>
+                                    <h5>Farm Name</h5>
+                                    <p>Fruits in season: Durian, Rambutan</p>
+                                </a>
+                            </article>
+                        </li>
+                    </ul>
+                </section>
+
+                <section id="dry-season-farms" aria-labelledby="dry-heading">
+                    <h4 id="dry-heading">Dry season (December to May)</h4>
+                    <ul id="dry-list">
+                        <li>
+                            <article>
+                                <a href="farm.html?id=6">
+                                    <figure>
+                                        <img src="" alt="Farm name entrance">
+                                        <figcaption>Farm Name</figcaption>
+                                    </figure>
+                                    <h5>Farm Name</h5>
+                                    <p>Fruits in season: Mango, Watermelon</p>
+                                </a>
+                            </article>
+                        </li>
+                    </ul>
+                </section>
+            </section>
+
+            <section id="farm-categories" aria-labelledby="farm-categories-heading">
+                <h3 id="farm-categories-heading">Farm Categories</h3>
+                <ul id="categories-list">
+                    <li><a href="farms.html?category=organic">Organic Farms</a></li>
+                    <li><a href="farms.html?category=agritourism">Agritourism Farms</a></li>
+                    <li><a href="farms.html?category=family-friendly">Family-Friendly Farms</a></li>
+                    <li><a href="farms.html?category=exotic-fruits">Exotic Fruit Farms</a></li>
+                </ul>
+            </section>
+
+            <p><a href="farms.html">Browse all farms</p>
+        </section>
+
+
+
+        <section id="reservations">
+            <header>
+                <h2>Make a Reservation</h2>
+                <p>Plan your visit to your favorite farm. Fill out the form below to reserve your spot. We will email the details to the farm and send a copy to you. The farm will contact you to confirm your reservation.</p>
+            </header>
+            
+            <form id="reservation-form" action="reservation.html" method="post" novalidate>
+                <input type="hidden" id="farm-id" name="farm-id" value="">
+                <input type="hidden" id="farm-name-field" name="farm-name" value="">
+
+                <p hidden>
+                    <label for="website">Leave this field blank</label>
+                    <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                </p>
+
+                <fieldset>
+                    <legend>Your Details</legend>
+
+                    <p>
+                        <label for="res-name">Full name:</label>
+                        <input type="text" id="res-name" name="visitor_name" required autocomplete="name" required>
+                    </p>
+                    
+                    <p>
+                        <label for="res-email">Email address:</label>
+                        <input type="email" id="res-email" name="visitor_email" autocomplete="email" aria-describedby="res-email-hint" required>
+                        <small id="res-email-hint">Your copy of the reservation will be sent to this email.</small>
+                    </p>
+                    
+                    <p>
+                        <label for="res-phone">Phone Number:</label>
+                        <input type="tel" id="res-phone" name="visitor_phone" autocomplete="tel" inputmode="tel" placeholder="09xx-xxx-xxxx" required>
+                    </p>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Reservation Details</legend>
+
+                    <p>
+                        <label for="res-date">Preferred date of visit:</label>
+                        <input type="date" id="res-date" name="visit_date" required>
+                    </p>
+
+                    <p>
+                        <label for="res-time">Preferred time of visit:</label>
+                        <select id="res-time" name="visit_time" required>
+                            <option value="" selected disabled>Select a time slot</option>
+                            <option value="08:00 - 10:00">8:00 AM to 10:00 AM</option>
+                            <option value="10:00 - 12:00">10:00 AM to 12:00 PM</option>
+                            <option value="01:00 - 15:00">1:00 PM to 3:00 PM</option>
+                            <option value="15:00 - 17:00">3:00 PM to 5:00 PM</option>
+                        </select>
+                    </p>
+
+                    <fieldset>
+                        <legend>Number of visitors</legend>
+
+                        <p>
+                            <label for="res-adults">Adults:</label>
+                            <input type="number" id="res-adults" name="guests_adults" min="1" value="1" required>
+                        </p>
+
+                        <p>
+                            <label for="res-children">Children (12 and below):</label>
+                            <input type="number" id="res-children" name="guests_children" min="0" value="0">
+                        </p>
+
+                        <p>
+                            <label for="res-seniors">Seniors (60 and above) / PWD:</label>
+                            <input type="number" id="res-seniors" name="guests_seniors" min="0" value="0">
+                        </p>
+                        <output id="res-total-guests" for="res-adults res-children res-seniors">Total visitors: 1</output>
+                    </fieldset>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Activities you're interested in (optional)</legend>
+
+                    <ul>
+                        <li>
+                            <input type="checkbox" id="activity-fruit-picking" name="activities[]" value="Fruit Picking">
+                            <label for="activity-fruit-picking">Fruit Picking</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="activity-farm-tour" name="activities[]" value="Farm Tour">
+                            <label for="activity-farm-tour">Farm Tour</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="activity-workshop" name="activities[]" value="Workshop">
+                            <label for="activity-workshop">Workshop</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="activity-tasting" name="activities[]" value="Tasting">
+                            <label for="activity-tasting">Tasting</label>
+                        </li>
+                        <li>
+                            <input type="checkbox" id="activity-picnic" name="activities[]" value="Picnic">
+                            <label for="activity-picnic">Picnic</label>
+                        </li>
+                    </ul>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Anything else the farm should know?</legend>
+
+                    <p>
+                        <label for="res-notes">Special requests or additional notes:</label>
+                        <textarea id="res-notes" name="additional_notes" rows="4" placeholder="Dietary restrictions, wheelchair accessibility, allergies, special requests, etc."></textarea>
+                    </p>
+                </fieldset>
+
+                <p>
+                    <input type="checkbox" id="res-consent" name="consent" required>
+                    <label for="res-consent">I agree that my name, email, and mobile number will be shared with the farm so they can process my reservation. See our <a href="#">privacy policy</a></label>
+                </p>
+
+                <p>
+                    <button type="submit">Submit Reservation</button>
+                    <button type="reset">Reset</button>
+                </p>
+
+                <p id="reservation-status" role="status" aria-live="polite"></p>
+            </form>
+
+            <section id="reservation-success" aria-labelledby="success-heading" hidden>
+                <h3 id="success-heading">Reservation Successful!</h3>
+                <p>Your reference number is <strong id="res-reference">RES-0001</strong>. We sent a copy to <span id="res-email">your email</span>. Please check your email for further details. If you do not see the it, check your spam folder. Thank you for your reservation. </p>
+
+                <dl>
+                    <div>
+                        <dt>Farm</dt>
+                        <dd id="sum-farm"></dd>
+                    </div>
+                    <div>
+                        <dt>Date of visit</dt>
+                        <dd id="sum-date"></dd>
+                    </div>
+                    <div>
+                        <dt>Time of visit</dt>
+                        <dd id="sum-slot"></dd>
+                    </div>
+                    <div>
+                        <dt>Guests</dt>
+                        <dd id="sum-guests"></dd>
+                    </div>
+                    <div>
+                        <dt>Status</dt>
+                        <dd>Pending farm confirmation</dd>
+                    </div>
+                </dl>
+                
+                <p><a href="homePage.html">Return to Home</a></p>
+            </section>
+        </section>
+    </main>
+
+    <footer id="site-footer">
+        <nav aria-label="Footer navigation">
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#suggested-farms">Farms</a></li>
+                <li><a href="#">Privacy policy</a></li>
+                <li><a href="#">Terms of use</a></li>
+            </ul>
+        </nav>
+        <address>
+            Contact us: <a href="mailto:jnc@gmail.com">hello@example.com</a>
+        </address>
+        <p><small>&copy; 2026 Fruit Farms PH. All rights reserved.</small></p>
+    </footer>
+</body>
+</html>
