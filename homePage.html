@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAGANA: Farm PH</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabaseClient.js"></script>
+    <script src="/js/homePage.js" defer></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nXCdaDQFBvhJ00B586XBi649965Zu3LRE0uB07dJ0=" crossorigin=""></script>
 </head>
 <body>
     
@@ -20,15 +25,15 @@
             <ul>
                 <li><a href="#hero">Home</a></li>
                 <li><a href="#about">About</a></li>
-                <li><a href="#suggested-farms">Farms</a></li>
-                <li><a href="#map">Map</a></li>
-                <li><a href="#reservations">Reservation</a></li>
+                <li><a href="farm-list.html">Farms</a></li>
+                <li><a href="#map-section">Map</a></li>
+                <li><a href="reservation.html">Reservation</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
 
         <search>
-            <form action="farms.html" method="get" role="search">
+            <form action="farm.html" method="get" role="search">
                 <label for="site-search">Search farms</label>
                 <input type="search" id="site-search" name="q" placeholder="Fruit, farm name, or province">
                 <button type="submit">Search</button>
@@ -37,9 +42,13 @@
     </header>
 
     <main id="main-content">
-        <section id="hero" aria-labelledby="hero-heading">
-            <h1 id="hero-heading">Welcome to SAGANA!</h1>
-            <p>Discover the best fruit farms in the Philippines and book your visit today!</p>
+        <!-- Hero Section -->
+        <section id="hero">
+            <div class="hero-content">
+                <h1>Discover Fresh Farms Near You</h1>
+                <p>Explore top fruit farms in the Philippines and plan your perfect farm getaway.</p>
+                <a href="#suggested-farms" class="btn btn-secondary">Explore Farms</a>
+            </div>
 
             <search>
                 <form action="farms.html" method="get" role="search">
@@ -49,636 +58,79 @@
                 </form>
             </search>
 
-            <div id="hero-carousel" role="region" aria-roledescription="carousel" aria-label="Featured news and posters">
-                <h2>SUGGESTED FOR YOU</h2>
+            <!-- Hero Carousel -->
+            <div id="hero-carousel" class="carousel news-carousel">
+                <div class="carousel-badge">📰 SUGGESTED FOR YOU</div>
+                
+                <div class="carousel-track" id="news-carousel-track">
+                    <!-- Dynamically populated from Supabase news feed -->
+                </div>
 
-                <article data-slide="1">
-                    <figure>
-                        <img src="" alt="Poster of the featured farm">
-                        <figcaption>
-                            <h2>This farm is going viral</h2>
-                            <p>Short headline summary kineme</p>
-                            <p>
-                            <time datetime="2026-10-29">October 29, 2026</time>
-                            </p>
-                            <a href="farm.html?id=1">Visit this farm</a>
-                        </figcaption>
-                    </figure>
-                </article>
-
-                <article data-slide="2">
-                    <figure>
-                        <img src="" alt="Poster of an upcoming harvest festival">
-                        <figcaption>
-                            <h2>Harvest festival poster title</h2>
-                            <p>Short description kineme</p>
-                            <p>
-                            <time datetime="2026-10-29">October 29, 2026</time>
-                            </p>
-                            <a href="farm.html?id=1">Visit this farm</a>
-                        </figcaption>
-                    </figure>
-                </article>
-
-                <button type="button" id="hero-prev" aria-label="Previous slide">Previous</button>
-                <button type="button" id="hero-next" aria-label="Next slide">Next</button>
-            </div>
-
-            <a href="#suggested-farms" class="btn">Explore Farms</a>
-        </section>
-
-        <section id="about" aria-labelledby="about-heading">
-            <h2>About SAGANA</h2>
-            <p>SAGANA is dedicated to connecting visitors with the finest fruit farms across the Philippines. Our platform allows you to explore, learn, and book visits to these farms with ease.</p>
-
-            <p>Mission</p>
-            <p>Vision</p>
-
-            <section id="about-team" aria-labelledby="about-team-heading">
-                <h3 id="about-team-heading">Meet the Team</h3>
-                <p>Our team is passionate about agriculture and technology, working together to bring you the best farm experiences.</p>
-                <ul>
-                    <li>
-                        <article>
-                            <figure>
-                                <img src="" alt="Photo of team member Nikki Limboc">
-                                <figcaption>
-                                    <h4>Nikki Limboc</h4>
-                                    <p>rolerolerolerole</p>
-                                </figcaption>
-                            </figure>
-                        </article>
-                    </li>
-                    <li>
-                        <article>
-                            <figure>
-                                <img src="" alt="Photo of team member Julian Carlo Magbuhat">
-                                <figcaption>
-                                    <h4>Julian Carlo Magbuhat</h4>
-                                    <p>rolerolerolerole</p>
-                                </figcaption>
-                            </figure>
-                        </article>
-                    </li>
-                    <li>
-                        <article>
-                            <figure>
-                                <img src="" alt="Photo of team member Christine Nicole Miranda">
-                                <figcaption>
-                                    <h4>Christine Nicole Miranda</h4>
-                                    <p>rolerolerolerole</p>
-                                </figcaption>
-                            </figure>
-                        </article>
-                    </li>
-                </ul>
-            </section>
-        </section>
-
-        <section id="suggested-farms" aria-labelledby="suggested-farms-heading">
-            <h2>Suggested Farms</h2>
-
-            <section id="farms-near-you" aria-labelledby="farms-near-you-heading">
-                <header>
-                    <h3 id="farms-near-you-heading">Farms Near You</h3>
-                    <p id="location-status" aria-live="polite">Allow location access to see farms near you.</p>
-                    <button type="button" id="location-button">Use My Location</button>
-                </header>
-                <ul id="nearby-farms-list">
-                    <!-- farm cards(two farms nakalagay currently)-->
-                    <li>
-                        <article>
-                            <a href="farm.html?id=1">
-                                <figure>
-                                    <img src="" alt="Farm name entrance">
-                                    <figcaption>Farm Name</figcaption>
-                                </figure>
-                                <h4>Farm Name</h4>
-                                <p>City / Province</p>
-                                <p>Fruits: Mango, Pineapple</p>
-                                <p><data value="12.5">12.5 km</data> away</p>
-                            </a>
-                        </article>
-                    </li>
-                    <li>
-                        <article>
-                            <a href="farm.html?id=2">
-                                <figure>
-                                    <img src="" alt="Farm name entrance">
-                                    <figcaption>Farm Name</figcaption>
-                                </figure>
-                                <h4>Farm Name</h4>
-                                <p>City / Province</p>
-                                <p>Fruits: Mango, Pineapple</p>
-                                <p><data value="12.5">12.5 km</data> away</p>
-                            </a>
-                        </article>
-                    </li>
-                </ul>
-            </section>
-
-            <section id="popular-farms" aria-labelledby="popular-farms-heading">
-                <h3 id="popular-farms-heading">Popular right nauw</h3>
-                <ul id="popular-farms-list">
-                    <!-- farm cards(two farms nakalagay currently)-->
-                    <li>
-                        <article>
-                            <a href="farm.html?id=3">
-                                <figure>
-                                    <img src="" alt="Farm name entrance">
-                                    <figcaption>Farm Name</figcaption>
-                                </figure>
-                                <h4>Farm Name</h4>
-                                <p>City / Province</p>
-                                <p>Fruits: Mango, Pineapple</p>
-                            </a>
-                        </article>
-                    </li>
-                    <li>
-                        <article>
-                            <a href="farm.html?id=4">
-                                <figure>
-                                    <img src="" alt="Farm name entrance">
-                                    <figcaption>Farm Name</figcaption>
-                                </figure>
-                                <h4>Farm Name</h4>
-                                <p>City / Province</p>
-                                <p>Fruits: Mango, Pineapple</p>
-                            </a>
-                        </article>
-                    </li>
-                </ul>
-            </section>
-
-            <section id="seasonal-farms" aria-labelledby="seasonal-heading">
-                <h3 id="seasonal-heading">Best for the season</h3>
-
-                <section id="wet-season-farms" aria-labelledby="wet-heading">
-                    <h4 id="wet-heading">Wet season (June to November)</h4>
-                    <ul id="wet-list">
-                        <li>
-                            <article>
-                                <a href="farm.html?id=5">
-                                    <figure>
-                                        <img src="" alt="Farm name entrance">
-                                        <figcaption>Farm Name</figcaption>
-                                    </figure>
-                                    <h5>Farm Name</h5>
-                                    <p>Fruits in season: Durian, Rambutan</p>
-                                </a>
-                            </article>
-                        </li>
-                    </ul>
-                </section>
-
-                <section id="dry-season-farms" aria-labelledby="dry-heading">
-                    <h4 id="dry-heading">Dry season (December to May)</h4>
-                    <ul id="dry-list">
-                        <li>
-                            <article>
-                                <a href="farm.html?id=6">
-                                    <figure>
-                                        <img src="" alt="Farm name entrance">
-                                        <figcaption>Farm Name</figcaption>
-                                    </figure>
-                                    <h5>Farm Name</h5>
-                                    <p>Fruits in season: Mango, Watermelon</p>
-                                </a>
-                            </article>
-                        </li>
-                    </ul>
-                </section>
-            </section>
-
-            <section id="farm-categories" aria-labelledby="farm-categories-heading">
-                <h3 id="farm-categories-heading">Farm Categories</h3>
-                <ul id="categories-list">
-                    <li><a href="farms.html?category=organic">Organic Farms</a></li>
-                    <li><a href="farms.html?category=agritourism">Agritourism Farms</a></li>
-                    <li><a href="farms.html?category=family-friendly">Family-Friendly Farms</a></li>
-                    <li><a href="farms.html?category=exotic-fruits">Exotic Fruit Farms</a></li>
-                </ul>
-            </section>
-
-            <p><a href="farms.html">Browse all farms</p>
-        </section>
-
-        <section id="map" aria-labelledby="map-heading">
-            <header>
-                <h2 id="map-heading">View Map</h2>
-                <p>Find fruit farms across the Philippines. Select a pin to view the farm, or use the list to get directions.</p>
-            </header>
-
-            <search>
-                <form id="'map-filter-form" action="#" method="get" role="search">
-                    <fieldset>
-                        <legend>Filter farms</legend>
-                        <p>
-                            <label for="map-fruit">Fruit</label>
-                            <select id="map-fruit" name="fruit">
-                                <option value="">All fruits</option>
-                                <option value="mango">Mango</option>
-                                <option value="pineapple">Pineapple</option>
-                                <option value="durian">Durian</option>
-                                <option value="rambutan">Rambutan</option>
-                                <option value="watermelon">Watermelon</option>
-                                <option value="banana">Banana</option>
-                                <option value="strawberry">Strawberry</option>
-                            </select>
-                        </p>
-
-                        <p>
-                            <label for="map-province">Province</label>
-                            <select id="map-province" name="province">
-                                <option value="">All provinces</option>
-                                <option value="batangas">Batangas</option>
-                                <option value="laguna">Laguna</option>
-                                <option value="cavite">Cavite</option>
-                                <option value="rizal">Rizal</option>
-                                <option value="bulacan">Bulacan</option>
-                                <option value="quezon">Quezon</option>
-                                <option value="pampanga">Pampanga</option>
-                                <option value="bukidnon">Bukidnon</option>
-                                <option value="baguio">Baguio</option>
-                                <option value="kalinga">Kalinga</option>
-                            </select>
-                        </p>
-
-                        <p>
-                            <label for="map-season">Season</label>
-                            <select id="map-season" name="season">
-                                <option value="">All seasons</option>
-                                <option value="wet">Wet season (June to November)</option>
-                                <option value="dry">Dry season (December to May)</option>
-                            </select>
-                        </p>
-
-                        <button type="submit">Apply filters</button>
-                        <button type="reset">Clear filters</button>
-                    </fieldset>
-                </form>
-            </search>
-
-            <div id="map-layout">
-                <figure id="map-figure">
-                    <div id="farm-map" role="region" aria-label="Interactive map showing the locations of fruit farms" data-center-lat="12.8797" data-center-lng="121.7740" data-zoom="6">
-                        <noscript>
-                            <p>JavaScript is required to view the map. Please use the farm list beside it to find directions.</p>
-                        </noscript>
-                    </div>
-                    <figcaption>
-                        Map data &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors
-                    </figcaption>
-                </figure>
-
-                <aside id="map-sidebar" aria-labelledby="map-list-heading">
-                    <h3 id="map-list-heading">Farms on the map</h3>
-                    <p id="map-results-status" role="status" aria-live="polite">Showing all farms</p>
-
-                    <button type="button" id="map-locate">Show farms near me</button>
-
-                    <ul id="map-farm-list">
-                        <li data-farm-id="1" data-lat="13.7565" data-lng="121.0583" data-fruits="mango,pineapple" data-province="batangas" data-season="dry">
-                            <article>
-                                <h4>Farm Name</h4>
-                                <address>Barangay, City, Province</address>
-                                <p>Fruits: Mango, Pineapple</p>
-                                <p>
-                                    <data class="distance" value="">Distance appears after you share your location</data>
-                                </p>
-                                <p>
-                                    <button type="button" class="show-on-map"> Show on map</button>
-                                    <a href="farm.html?id=1">View farm details</a>
-                                    <a href="https://www.google.com/maps/dir/?api=1&destination=13.7565,121.0583" target="_blank" rel="noopener noreferrer">Get directions</a>
-                                </p>
-                            </article>
-                        </li>
-                        <li data-farm-id="2" data-lat="14.6760" data-lng="121.0437" data-fruits="durian,rambutan" data-province="laguna" data-season="wet">
-                            <article>
-                                <h4>Farm Name</h4>
-                                <address>Barangay, City, Province</address>
-                                <p>Fruits: Durian, Rambutan</p>
-                                <p>
-                                    <data class="distance" value="">Distance appears after you share your location</data>
-                                </p>
-                                <p>
-                                    <button type="button" class="show-on-map"> Show on map</button>
-                                    <a href="farm.html?id=2">View farm details</a>
-                                    <a href="https://www.google.com/maps/dir/?api=1&destination=14.6760,121.0437" target="_blank" rel="noopener noreferrer">Get directions</a>
-                                </p>
-                            </article>
-                        </li>
-                    </ul>
-                </aside>
+                <div class="carousel-nav-buttons">
+                    <button type="button" class="carousel-btn prev" id="hero-prev" aria-label="Previous headline">&larr;</button>
+                    <button type="button" class="carousel-btn next" id="hero-next" aria-label="Next headline">&rarr;</button>
+                </div>
             </div>
         </section>
 
-        <section id="reservations">
-            <header>
-                <h2>Make a Reservation</h2>
-                <p>Plan your visit to your favorite farm. Fill out the form below to reserve your spot. We will email the details to the farm and send a copy to you. The farm will contact you to confirm your reservation.</p>
-            </header>
+        <!-- Suggested Farms Section -->
+        <section id="suggested-farms">
+            <div class="section-header-flex">
+                <h2>Popular Right Now</h2>
+                <a href="farm-list.html" class="btn btn-outline btn-sm">Browse All Farms &rarr;</a>
+            </div>
+
+            <div class="farm-grid"></div>
+
+            <div class="view-all-container">
+                <a href="farm-list.html" class="btn btn-primary btn-lg">Browse All Farms in PH &rarr;</a>
+            </div>
+        </section>
+
+        <!-- CTA Reservation Prompt Section -->
+        <section id="reservation-cta" class="cta-banner">
+            <div class="cta-container">
+                <div class="cta-text">
+                    <h2>Ready for Your Next Farm Adventure?</h2>
+                    <p>Reserve your visit ahead of time to secure tour slots, fruit picking passes, and fresh harvests!</p>
+                </div>
+                <div class="cta-action">
+                    <a href="reservation.html" class="btn btn-primary btn-lg">Book Your Visit Now</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="map-section" class="map-container-section">
+            <div class="map-header">
+                <h2>Explore Farms on the Map</h2>
+                <p>Click on any pin to view farm details, active crops, and direct visit links across the Philippines.</p>
+            </div>
             
-            <form id="reservation-form" action="reservation.html" method="post" novalidate>
-                <input type="hidden" id="farm-id" name="farm-id" value="">
-                <input type="hidden" id="farm-name-field" name="farm-name" value="">
-
-                <p hidden>
-                    <label for="website">Leave this field blank</label>
-                    <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
-                </p>
-
-                <fieldset>
-                    <legend>Your Details</legend>
-
-                    <p>
-                        <label for="res-name">Full name:</label>
-                        <input type="text" id="res-name" name="visitor_name" required autocomplete="name" required>
-                    </p>
-                    
-                    <p>
-                        <label for="res-email">Email address:</label>
-                        <input type="email" id="res-email" name="visitor_email" autocomplete="email" aria-describedby="res-email-hint" required>
-                        <small id="res-email-hint">Your copy of the reservation will be sent to this email.</small>
-                    </p>
-                    
-                    <p>
-                        <label for="res-phone">Phone Number:</label>
-                        <input type="tel" id="res-phone" name="visitor_phone" autocomplete="tel" inputmode="tel" placeholder="09xx-xxx-xxxx" required>
-                    </p>
-                </fieldset>
-
-                <fieldset>
-                    <legend>Reservation Details</legend>
-
-                    <p>
-                        <label for="res-date">Preferred date of visit:</label>
-                        <input type="date" id="res-date" name="visit_date" required>
-                    </p>
-
-                    <p>
-                        <label for="res-time">Preferred time of visit:</label>
-                        <select id="res-time" name="visit_time" required>
-                            <option value="" selected disabled>Select a time slot</option>
-                            <option value="08:00 - 10:00">8:00 AM to 10:00 AM</option>
-                            <option value="10:00 - 12:00">10:00 AM to 12:00 PM</option>
-                            <option value="01:00 - 15:00">1:00 PM to 3:00 PM</option>
-                            <option value="15:00 - 17:00">3:00 PM to 5:00 PM</option>
-                        </select>
-                    </p>
-
-                    <fieldset>
-                        <legend>Number of visitors</legend>
-
-                        <p>
-                            <label for="res-adults">Adults:</label>
-                            <input type="number" id="res-adults" name="guests_adults" min="1" value="1" required>
-                        </p>
-
-                        <p>
-                            <label for="res-children">Children (12 and below):</label>
-                            <input type="number" id="res-children" name="guests_children" min="0" value="0">
-                        </p>
-
-                        <p>
-                            <label for="res-seniors">Seniors (60 and above) / PWD:</label>
-                            <input type="number" id="res-seniors" name="guests_seniors" min="0" value="0">
-                        </p>
-                        <output id="res-total-guests" for="res-adults res-children res-seniors">Total visitors: 1</output>
-                    </fieldset>
-                </fieldset>
-
-                <fieldset>
-                    <legend>Activities you're interested in (optional)</legend>
-
-                    <ul>
-                        <li>
-                            <input type="checkbox" id="activity-fruit-picking" name="activities[]" value="Fruit Picking">
-                            <label for="activity-fruit-picking">Fruit Picking</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="activity-farm-tour" name="activities[]" value="Farm Tour">
-                            <label for="activity-farm-tour">Farm Tour</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="activity-workshop" name="activities[]" value="Workshop">
-                            <label for="activity-workshop">Workshop</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="activity-tasting" name="activities[]" value="Tasting">
-                            <label for="activity-tasting">Tasting</label>
-                        </li>
-                        <li>
-                            <input type="checkbox" id="activity-picnic" name="activities[]" value="Picnic">
-                            <label for="activity-picnic">Picnic</label>
-                        </li>
-                    </ul>
-                </fieldset>
-
-                <fieldset>
-                    <legend>Anything else the farm should know?</legend>
-
-                    <p>
-                        <label for="res-notes">Special requests or additional notes:</label>
-                        <textarea id="res-notes" name="additional_notes" rows="4" placeholder="Dietary restrictions, wheelchair accessibility, allergies, special requests, etc."></textarea>
-                    </p>
-                </fieldset>
-
-                <p>
-                    <input type="checkbox" id="res-consent" name="consent" required>
-                    <label for="res-consent">I agree that my name, email, and mobile number will be shared with the farm so they can process my reservation. See our <a href="#">privacy policy</a></label>
-                </p>
-
-                <p>
-                    <button type="submit">Submit Reservation</button>
-                    <button type="reset">Reset</button>
-                </p>
-
-                <p id="reservation-status" role="status" aria-live="polite"></p>
-            </form>
-
-            <section id="reservation-success" aria-labelledby="success-heading" hidden>
-                <h3 id="success-heading">Reservation Successful!</h3>
-                <p>Your reference number is <strong id="res-reference">RES-0001</strong>. We sent a copy to <span id="res-email">your email</span>. Please check your email for further details. If you do not see the it, check your spam folder. Thank you for your reservation. </p>
-
-                <dl>
-                    <div>
-                        <dt>Farm</dt>
-                        <dd id="sum-farm"></dd>
-                    </div>
-                    <div>
-                        <dt>Date of visit</dt>
-                        <dd id="sum-date"></dd>
-                    </div>
-                    <div>
-                        <dt>Time of visit</dt>
-                        <dd id="sum-slot"></dd>
-                    </div>
-                    <div>
-                        <dt>Guests</dt>
-                        <dd id="sum-guests"></dd>
-                    </div>
-                    <div>
-                        <dt>Status</dt>
-                        <dd>Pending farm confirmation</dd>
-                    </div>
-                </dl>
-
-                <p><a href="homePage.html">Return to Home</a></p>
-            </section>
+            <!-- Map Target Container -->
+            <div id="leaflet-map"></div>
         </section>
 
-        <section id="contact" aria-labelledby="contact-heading">
-            <header>
-                <h2 id="contact-heading">Contact Us</h2>
-                <p>Do you own or manage a fruit farm? Send us a message to have your farm featured on SAGANA. You can also contact us for questions or feedback.</p>
-            </header>
-
-            <div id="contact-layout">
-                <aside id="contact-details" aria-labelledby="contact-details-heading">
-                    <h3 id="contact-details-heading">Our Contact Information</h3>
-                    <address>
-                        <p>Email: <a href="mailto:hello@example.com">hello@example.com</a></p>
-                        <p>Phone: <a href="tel:+630000000000">+63 000 000 0000</a></p>
-                        <p>Address: 123 Farm Street, City, Province, Philippines</p>
-                    </address>
-
-                    <section aria-labelledby="why-feature-heading">
-                        <h4 id="why-feature-heading">Why Feature Your Farm?</h4>
-                        <ul>
-                            <li>Reach a wider audience of farm visitors</li>
-                            <li>Increase bookings and receive reservations directly by email</li>
-                            <li>Showcase your farm's unique offerings</li>
-                        </ul>
-                    </section>
-                </aside>
-
-                <form id="contact-form" action="#" method="post" novalidate>
-                    <p hidden>
-                        <label for="contact-website">Leave this field blank</label>
-                        <input type="text" id="contact-website" name="website" tabindex="-1" autocomplete="off">
-                    </p>
-
-                    <fieldset>
-                        <legend>Inquiry type</legend>
-                        <p>
-                            <input type="radio" id="type-feature" name="inquiry_type" value="feature-my-farm" checked>
-                            <label for="type-feature">Feature my farm</label>
-                        </p>
-                        <p>
-                            <input type="radio" id="type-question" name="inquiry_type" value="general-question">
-                            <label for="type-question">General Question</label>
-                        </p>
-                        <p>
-                            <input type="radio" id="type-feedback" name="inquiry_type" value="feedback">
-                            <label for="type-feedback">Feedback</label>
-                        </p>
-                    </fieldset>
-
-                    <fieldset>
-                        <legend>Your Details</legend>
-                        <p>
-                            <label for="contact-name">Full name:</label>
-                            <input type="text" id="contact-name" name="contact_name" required autocomplete="name">
-                        </p>
-                        <p>
-                            <label for="contact-role">Role at the farm:</label>
-                            <input type="text" id="contact-role" name="contact_role" placeholder="owner, manager, administrator" autocomplete="organization-title">
-                        </p>
-                        <p>
-                            <label for="contact-email">Email address:</label>
-                            <input type="email" id="contact-email" name="email" required autocomplete="email">
-                        </p>
-                        <p>
-                            <label for="contact-phone">Phone Number:</label>
-                            <input type="tel" id="contact-phone" name="phone" autocomplete="tel" inputmode="tel" placeholder="09xx-xxx-xxxx">
-                        </p>
-                    </fieldset>
-
-                    <fieldset id="farm-details-fieldset">
-                        <legend>Farm Details</legend>
-
-                        <p>
-                            <label for="contact-farm-name">Farm name:</label>
-                            <input type="text" id="contact-farm-name" name="farm_name">
-                        </p>
-                        <p>
-                            <label for="contact-farm-location">Farm location (City, Province):</label>
-                            <input type="text" id="contact-farm-location" name="farm_location" placeholder="Barangay, City, Province">
-                        </p>
-                        <p>
-                            <label for="contact-farm-maps">Farm maps link (optional):</label>
-                            <input type="url" id="contact-farm-maps" name="farm_maps" placeholder="https://www.google.com/maps/place/...">
-                        </p>
-
-                        <fieldset>
-                            <legend>Fruits grown</legend>
-                            <ul>
-                                <li>
-                                    <input type="checkbox" id="fruit-mango" name="fruits[]" value="Mango">
-                                    <label for="fruit-mango">Mango</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="fruit-banana" name="fruits[]" value="Banana">
-                                    <label for="fruit-banana">Banana</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="fruit-strawberry" name="fruits[]" value="Strawberry">
-                                    <label for="fruit-strawberry">Strawberry</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="fruit-pineapple" name="fruits[]" value="Pineapple">
-                                    <label for="fruit-pineapple">Pineapple</label>
-                                </li>
-                                <li>
-                                    <input type="checkbox" id="fruit-durian" name="fruits[]" value="Durian">
-                                    <label for="fruit-durian">Durian</label>
-                                </li>
-                                <li>
-                                    <input typ="checkbox" id="fruit-other" name="fruits[]" value="Other">
-                                    <label for="fruit-other">Other</label>
-                                </li>
-                            </ul>
-                        </fieldset>
-
-                        <p>
-                            <label for="contact-farm-link">Farm website link or social media page (optional):</label>
-                            <input type="url" id="contact-farm-link" name="farm_link" placeholder="https://www.example.com">
-                        </p>
-
-                        <p>
-                            <input type="checkbox" id="farm-open-visitors" name="open_to_visitors" value="yes">
-                            <label for="farm-open-visitors">My farm is open to visitors</label>
-                        </p>
-                    </fieldset>
-
-                    <fieldset>
-                        <legend>Message</legend>
-                        <p>
-                            <label for="contact-message">Your message:</label>
-                            <textarea id="contact-message" name="message" rows="6" maxlength="1000" required placeholder="Tell us about your farm or your question."></textarea>
-                        </p>
-                    </fieldset>
-
-                    <p>
-                        <input type="checkbox" id="contact-consent" name="consent" required>
-                        <label for="contact-consent">I agree that SAGANA may use these contact details so they can respond to my inquiry. See our <a href="#">privacy policy</a></label>  
-                    </p>
-
-                    <p>
-                        <button type="submit">Send Message</button>
-                        <button type="reset">Clear form</button>
-                    </p>
-
-                    <p id="contact-status" role="status" aria-live="polite"></p>
-                </form>
+        <!-- About Section -->
+        <section id="about">
+            <h2>About SAGANA</h2>
+            <p>SAGANA connects travelers and fruit lovers to authentic local agritourism experiences across the Philippines.</p>
+            <div class="team-grid">
+                <article class="team-card">
+                    <img src="images/team1.jpg" alt="Nikki Limboc">
+                    <h4>Nikki Limboc</h4>
+                    <p>Lead Developer</p>
+                </article>
+                <article class="team-card">
+                    <img src="images/team2.jpg" alt="Julian Carlo Magbuhat">
+                    <h4>Julian Carlo Magbuhat</h4>
+                    <p>UI/UX Designer</p>
+                </article>
+                <article class="team-card">
+                    <img src="images/team3.jpg" alt="Christine Nicole Miranda">
+                    <h4>Christine Nicole Miranda</h4>
+                    <p>Project Lead</p>
+                </article>
             </div>
-
-            <section id="contact-success" aria-labelledby="contact-success-heading" hidden>
-                <h3 id="contact-success-heading">Message Sent!</h3>
-                <p>Thank you for reaching out to us. We have received your message and will get back to you as soon as possible. A copy of your message has been sent to your email address.</p>
-                <p><a href="homePage.html">Return to Home</a></p>
-            </section>
         </section>
     </main>
 
