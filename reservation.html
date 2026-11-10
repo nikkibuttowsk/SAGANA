@@ -6,11 +6,13 @@
     <title>Reservation - Plan your farm day</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
     <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Third Party Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
-    <script src="js/reservation.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script src="js/supabaseClient.js"></script>
-    <script src="js/reservation.js"></script>
+    <script src="js/reservation.js" defer></script>
 </head>
 <body class="bg-light">
     <header id="site-header">
@@ -21,7 +23,7 @@
         <nav aria-label="Main navigation">
             <ul>
                 <li><a href="homePage.html">Home</a></li>
-                <li><a href="homePage.html#suggested-farms">Farms</a></li>
+                <li><a href="farm-list.html">Farms</a></li>
                 <li><a href="reservation.html" class="active">Reservation</a></li>
             </ul>
         </nav>
@@ -52,15 +54,12 @@
         <form id="multi-step-reservation-form">
             <!-- STEP 1: Visit Details -->
             <section id="step-1" class="step-panel active">
-                <div class="selected-farm-card">
-                    <img src="images/farm-thumb.jpg" alt="Baguio Strawberry Farm">
-                    <div>
-                        <h2>Baguio Strawberry Farm</h2>
-                        <p>Baguio City, Philippines &bull; Pick-your-own farm visit</p>
-                    </div>
+                
+                <div id="farm-selection-container">
+                    <p class="text-muted">Loading farm details...</p>
                 </div>
 
-                <div class="date-time-grid">
+                <div class="date-time-grid mt-2">
                     <div class="calendar-container">
                         <label>Choose your date</label>
                         <input type="text" id="visit-date" placeholder="Select date..." required readonly>
@@ -119,7 +118,7 @@
                     <hr>
                     <div class="ticket-body">
                         <div class="ticket-details">
-                            <h3 id="ticket-farm">Baguio Strawberry Farm</h3>
+                            <h3 id="ticket-farm">Selected Farm</h3>
                             <p><strong>Name:</strong> <span id="ticket-name"></span></p>
                             <p><strong>Date:</strong> <span id="ticket-date"></span></p>
                             <p><strong>Time Slot:</strong> <span id="ticket-slot"></span></p>
@@ -144,10 +143,9 @@
             </ul>
         </nav>
         <address>
-            Contact us: <a href="mailto:jnc@gmail.com">hello@example.com</a>
+            Contact us: <a href="mailto:sagana077@gmail.com">sagana077@gmail.com</a>
         </address>
         <p><small>&copy; 2026 SAGANA: Fruit Farms PH. All rights reserved.</small></p>
     </footer>
-
 </body>
 </html>
