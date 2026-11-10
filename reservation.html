@@ -23,11 +23,11 @@
         <nav aria-label="Main navigation">
             <ul>
                 <li><a href="homePage.html#hero">Home</a></li>
-                <li><a href="homePage.html">About</a></li>
+                <li><a href="homePage.html#about">About</a></li>
                 <li><a href="farm-list.html">Farms</a></li>
                 <li><a href="homePage.html#map-section">Map</a></li>
-                <li><a href="reservation.html">Reservation</a></li>
-                <li><a href="#contact">Contact</a></li>
+                <li><a href="reservation.html" class="active">Reservation</a></li>
+                <li><a href="homePage.html#contact">Contact</a></li>
             </ul>
         </nav>
     </header>
@@ -58,27 +58,31 @@
             <!-- STEP 1: Visit Details -->
             <section id="step-1" class="step-panel active">
                 
-                <div id="farm-selection-container">
-                    <p class="text-muted">Loading farm details...</p>
-                </div>
-
-                <div class="date-time-grid mt-2">
-                    <div class="calendar-container">
-                        <label>Choose your date</label>
-                        <input type="text" id="visit-date" placeholder="Select date..." required readonly>
+                <fieldset class="form-fieldset">
+                    <legend class="form-legend">Step 1: Choose Farm & Schedule</legend>
+                    
+                    <div id="farm-selection-container">
+                        <p class="text-muted">Loading farm details...</p>
                     </div>
 
-                    <div class="time-slots-container">
-                        <label>Select time slot</label>
-                        <div class="slot-group">
-                            <button type="button" class="slot-btn" data-slot="08:00 - 10:00">8:00 AM - 10:00 AM</button>
-                            <button type="button" class="slot-btn" data-slot="10:00 - 12:00">10:00 AM - 12:00 PM</button>
-                            <button type="button" class="slot-btn" data-slot="13:00 - 15:00">1:00 PM - 3:00 PM</button>
-                            <button type="button" class="slot-btn" data-slot="15:00 - 17:00">3:00 PM - 5:00 PM</button>
+                    <div class="date-time-grid mt-2">
+                        <div class="calendar-container">
+                            <label for="visit-date">Choose your date</label>
+                            <input type="text" id="visit-date" placeholder="Select date..." required readonly>
                         </div>
-                        <input type="hidden" id="selected-slot" required>
+
+                        <div class="time-slots-container">
+                            <label>Select time slot</label>
+                            <div class="slot-group">
+                                <button type="button" class="slot-btn" data-slot="08:00 - 10:00">8:00 AM - 10:00 AM</button>
+                                <button type="button" class="slot-btn" data-slot="10:00 - 12:00">10:00 AM - 12:00 PM</button>
+                                <button type="button" class="slot-btn" data-slot="13:00 - 15:00">1:00 PM - 3:00 PM</button>
+                                <button type="button" class="slot-btn" data-slot="15:00 - 17:00">3:00 PM - 5:00 PM</button>
+                            </div>
+                            <input type="hidden" id="selected-slot" required>
+                        </div>
                     </div>
-                </div>
+                </fieldset>
 
                 <div class="step-actions">
                     <button type="button" class="btn btn-primary" onclick="nextStep(2)">Continue to Guests &rarr;</button>
@@ -87,25 +91,29 @@
 
             <!-- STEP 2: Guest Details -->
             <section id="step-2" class="step-panel">
-                <h2>Your details, then you're set</h2>
-                <div class="form-grid">
-                    <p class="form-field">
-                        <label for="visitor-name">Full name</label>
-                        <input type="text" id="visitor-name" required placeholder="e.g. Maria Santos">
-                    </p>
-                    <p class="form-field">
-                        <label for="visitor-email">Email address</label>
-                        <input type="email" id="visitor-email" required placeholder="maria@example.com">
-                    </p>
-                    <p class="form-field">
-                        <label for="visitor-phone">Mobile Number</label>
-                        <input type="tel" id="visitor-phone" required placeholder="0917-XXX-XXXX">
-                    </p>
-                    <p class="form-field">
-                        <label for="visitor-count">Number of visitors</label>
-                        <input type="number" id="visitor-count" min="1" value="1" required>
-                    </p>
-                </div>
+                
+                <fieldset class="form-fieldset">
+                    <legend class="form-legend">Step 2: Guest & Contact Information</legend>
+                    
+                    <div class="form-grid">
+                        <p class="form-field">
+                            <label for="visitor-name">Full name</label>
+                            <input type="text" id="visitor-name" required placeholder="e.g. Maria Santos">
+                        </p>
+                        <p class="form-field">
+                            <label for="visitor-email">Email address</label>
+                            <input type="email" id="visitor-email" required placeholder="maria@example.com">
+                        </p>
+                        <p class="form-field">
+                            <label for="visitor-phone">Mobile Number</label>
+                            <input type="tel" id="visitor-phone" required placeholder="0917-XXX-XXXX">
+                        </p>
+                        <p class="form-field">
+                            <label for="visitor-count">Number of visitors</label>
+                            <input type="number" id="visitor-count" min="1" value="1" required>
+                        </p>
+                    </div>
+                </fieldset>
 
                 <div class="step-actions">
                     <button type="button" class="btn btn-secondary" onclick="nextStep(1)">&larr; Back</button>
@@ -139,8 +147,8 @@
     <footer id="site-footer">
         <nav aria-label="Footer navigation">
             <ul>
-                <li><a href="#about">About</a></li>
-                <li><a href="#suggested-farms">Farms</a></li>
+                <li><a href="homePage.html#about">About</a></li>
+                <li><a href="farm-list.html">Farms</a></li>
                 <li><a href="#">Privacy policy</a></li>
                 <li><a href="#">Terms of use</a></li>
             </ul>
