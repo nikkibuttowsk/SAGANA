@@ -39,28 +39,31 @@ function nextStep(stepNumber) {
 }
 
 async function submitReservation() {
-    // Get URL param if redirected from a specific farm page
     const urlParams = new URLSearchParams(window.location.search);
-    const farmId = urlParams.get('farmId');
+    let farmId = urlParams.get('farmId') || urlParams.get('id');
 
-    const name = document.getElementById("visitor-name").value;
-    const email = document.getElementById("visitor-email").value;
-    const phone = document.getElementById("visitor-phone").value;
-    const date = document.getElementById("visit-date").value;
-    const slot = document.getElementById("selected-slot").value;
-    const guests = parseInt(document.getElementById("visitor-count").value, 10);
+    if (!farmId || farmId === "null" || farmId === "") {
+        farmId = null;
+    }
+
+    const name = document.getElementById("visitor-name")?.value;
+    const email = document.getElementById("visitor-email")?.value;
+    const phone = document.getElementById("visitor-phone")?.value;
+    const date = document.getElementById("visit-date")?.value;
+    const slot = document.getElementById("selected-slot")?.value;
+    const guests = parseInt(document.getElementById("visitor-count")?.value || "1", 10);
 
     if (!name || !email || !phone || !date || !slot) {
-        alert("Please complete all required reservation details.");
+        alert("Please complete all required fields.");
         return;
     }
 
-    // Insert payload directly into Supabase PostgreSQL
+    // 1. Insert reservation into Supabase PostgreSQL
     const { data, error } = await supabase
         .from('reservations')
         .insert([
             {
-                farm_id: farmId || null, // Optional if no farm selected
+                farm_id: farmId,
                 visitor_name: name,
                 visitor_email: email,
                 visitor_phone: phone,
@@ -71,18 +74,31 @@ async function submitReservation() {
         ])
         .select();
 
-    if (error) {
-        console.error("Supabase Error:", error);
-        alert("Reservation failed: " + error.message);
+    if (error || !data || data.length === 0) {
+        console.error("Supabase Reservation Error:", error);
+        alert("Reservation failed: " + (error?.message || "Unknown error"));
         return;
     }
 
-    // Populate Digital Ticket (Step 3 UI)
+    // 2. Get the Unique Database ID for this reservation
+    const newReservation = data[0];
+    const reservationId = newReservation.id; 
+
+    // 3. Populate Digital Ticket Text
     document.getElementById("ticket-name").textContent = name;
     document.getElementById("ticket-date").textContent = date;
     document.getElementById("ticket-slot").textContent = slot;
     document.getElementById("ticket-guests").textContent = guests;
 
-    // Advance UI to Digital Ticket confirmation tab
+    // 4. Generate Unique QR Code using the Reservation ID
+    const qrImageElement = document.querySelector(".ticket-qr img");
+    if (qrImageElement) {
+        // Encode ticket payload into QR Code URL
+        const qrData = encodeURIComponent(`SAGANA-TICKET:${reservationId}`);
+        qrImageElement.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${qrData}`;
+        qrImageElement.alt = `Unique Ticket QR Code for ${reservationId}`;
+    }
+
+    // Advance wizard to Ticket step (Step 3)
     nextStep(3);
 }
