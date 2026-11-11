@@ -112,6 +112,14 @@ function nextStep(stepNumber) {
 async function submitReservation() {
     showError("");
 
+    if (!selectedFarm) {
+        const dropdown = $("#farm-dropdown");
+        if (dropdown && dropdown.value) {
+            const farmId = dropdown.value;
+            selectedFarm = { id: farmId, name: dropdown.options[dropdown.selectedIndex]?.text || "Selected Farm" };
+        }
+    }
+
     const invalid = $$("#step-2 input, #step-2 select").find((field) => !field.checkValidity());
     if (invalid) {
         const label = invalid.labels?.[0]?.textContent || invalid.name || "a field";

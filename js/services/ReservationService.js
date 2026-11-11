@@ -2,9 +2,10 @@ class ReservationService {
     static async createReservation(reservation) {
         reservation.validate();
 
-        const { error } = await db
+        const { data, error } = await db
             .from('reservations')
-            .insert([reservation.toPayload()]);
+            .insert([reservation.toPayload()])
+            .select();
 
         if (error) {
             console.error("ReservationService createReservation error:", error);
@@ -17,7 +18,8 @@ class ReservationService {
             const { error: fnError } = await db.functions.invoke("send-reservation-email", {
                 body: {
                     record: {
-                        id: savedData.id || reservation.idempotencyKey,
+                        id: savedData.id,
+                        idempotency_key: reservation.idempotencyKey,
                         visitor_name: reservation.visitorName,
                         visitor_email: reservation.visitorEmail,
                         visitor_phone: reservation.visitorPhone,
