@@ -1,10 +1,10 @@
 class FarmModel {
     constructor(data = {}) {
-        this.id = data.id || null;
+        this.id = data.id ?? null;
         this.name = data.name || 'Unnamed Farm';
         this.location = data.location || data.province || 'Philippines';
         this.province = data.province || '';
-        this.category = data.category || 'popular';
+        this.category = data.category || '';
         this.season = data.season || 'all';
         this.crops = Array.isArray(data.crops) ? data.crops : (data.crops ? [data.crops] : []);
         this.bearingSeason = data.bearing_season || 'All Season';
@@ -28,7 +28,20 @@ class FarmModel {
         return this.crops.length > 0 ? this.crops.join(', ') : 'Fresh Produce';
     }
 
+    getSeasonLabel(){
+        const labels = { wet: "Wet season (JUN - NOV)", dry: "Dry season (DEC - MAY)", all: "All year round" };
+        return labels[this.season] || labels.all;
+    }
+
     getCoverPhoto() {
         return this.images[0];
+    }
+
+    hasLocation() {
+        return this.latitude !== null && this.longitude !== null;
+    }
+
+    distanceFrom(lat, lng) {
+        return this.hasLocation() ? distanceKm(lat, lng, this.latitude, this.longitude) : null;
     }
 }

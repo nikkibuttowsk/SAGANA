@@ -7,17 +7,23 @@ class ReservationModel {
         this.visitorPhone = data.visitor_phone || '';
         this.visitDate = data.visit_date || '';
         this.timeSlot = data.time_slot || '';
-        this.guestCount = data.guest_count ? parseInt(data.guest_count, 10) : 1;
+        this.guestCount = Number.parseInt(data.guest_count, 10) || 1;
         // idempotency key
-        this.idempotencyKey = data.idempotency_key || `res_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+        this.idempotencyKey = data.idempotency_key || ReservationModel.newKey();
+    }
+
+    static newKey () {
+        return crypto.randomUUID?.() ?? `res_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
     }
 
     validate() {
+        if (!this.farmId) throw new Error("Please choose a farm.");
         if (!this.visitorName.trim()) throw new Error("Visitor name is required.");
         if (!this.visitorEmail.trim() || !this.visitorEmail.includes('@')) throw new Error("Valid email is required.");
         if (!this.visitorPhone.trim()) throw new Error("Mobile number is required.");
         if (!this.visitDate) throw new Error("Visit date is required.");
         if (!this.timeSlot) throw new Error("Time slot is required.");
+        if (this.guestCount < 1) throw new Error("At least one guest is required.");
         return true;
     }
 

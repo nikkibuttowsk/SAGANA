@@ -1,166 +1,170 @@
-let selectedFarmId = null;
-let selectedFarmName = "Selected Farm";
+let selectedFarm = null;   
+let selectedSlot = "";
+
+const idempotencyKey = ReservationModel.newKey();
 
 document.addEventListener("DOMContentLoaded", () => {
-    // Flatpickr Datepicker
-    if (typeof flatpickr !== "undefined") {
-        flatpickr("#visit-date", {
-            minDate: "today",
-            dateFormat: "Y-m-d"
-        });
+    const dateInput = $("#visit-date");
+
+    if (typeof flatpickr === "function") {
+        flatpickr(dateInput, { minDate: "today", maxDate: new Date().fp_incr(180), dateFormat: "Y-m-d" });
+    } else {
+        dateInput.type = "date";
+        dateInput.readOnly = false;
+        dateInput.min = new Date().toISOString().slice(0, 10);
     }
 
-    // Time slot selection
-    const slotBtns = document.querySelectorAll(".slot-btn");
-    slotBtns.forEach(btn => {
-        btn.addEventListener("click", () => {
-            slotBtns.forEach(b => b.classList.remove("selected"));
-            btn.classList.add("selected");
-            document.getElementById("selected-slot").value = btn.dataset.slot;
+    const slotButtons = $$(".slot-btn");
+    slotButtons.forEach((btn) => btn.addEventListener("click", () => {
+        slotButtons.forEach((b) => {
+            b.classList.toggle("selected", b === btn);
+            b.setAttribute("aria-pressed", String(b === btn));
         });
-    });
+        selectedSlot = btn.dataset.slot;
+        $("#selected-slot").value = selectedSlot;
+    }));
 
-    // Load Farm Data from Supabase Database
     initializeFarmSelection();
 });
 
+const selectedFarmCardHTML = (farm) => `
+    <div class="selected-farm-card">
+        <img src="${escapeHTML(assetUrl(farm.getCoverPhoto()))}" alt="">
+        <div>
+            <h2>${escapeHTML(farm.name)}</h2>
+            <p>${escapeHTML(farm.location)} &bull; Crops: ${escapeHTML(farm.getFormattedCrops())}</p>
+        </div>
+        <a href="farm-list.html" class="change-farm-btn">Change farm</a>
+    </div>`;
+
 async function initializeFarmSelection() {
-    const container = document.getElementById("farm-selection-container");
+    const container = $("#farm-selection-container");
     if (!container) return;
 
-    const urlParams = new URLSearchParams(window.location.search);
-    const farmIdParam = urlParams.get('farmId') || urlParams.get('id');
-
-    // Case A: reservation from a specific farm page
-    if (farmIdParam) {
-        const { data: farm, error } = await supabase
-            .from('farms')
-            .select('*')
-            .eq('id', farmIdParam)
-            .single();
-
-        if (!error && farm) {
-            selectedFarmId = farm.id;
-            selectedFarmName = farm.name;
-
-            const imageSrc = (farm.images && farm.images.length > 0) ? farm.images[0] : 'images/default-farm.jpg';
-            const cropsList = Array.isArray(farm.crops) ? farm.crops.join(", ") : farm.crops;
-
-            container.innerHTML = `
-                <div class="selected-farm-card">
-                    <img src="${imageSrc}" alt="${farm.name}" onerror="this.src='images/default-farm.jpg'">
-                    <div>
-                        <h2>${farm.name}</h2>
-                        <p>${farm.location || farm.province} &bull; Crops: ${cropsList}</p>
-                    </div>
-                    <a href="farm-list.html" class="change-farm-btn">Change Farm</a>
-                </div>
-            `;
-            return;
-        }
-    }
-
-    // Case B: "Reservation" from the Navbar (No URL ID passed)
-    const { data: farms, error } = await supabase
-        .from('farms')
-        .select('id, name, location, province');
-
-    if (error || !farms || farms.length === 0) {
-        container.innerHTML = `<p class="error-msg">Failed to load farms list. Please refresh.</p>`;
+    let farms;
+    try {
+        farms = await FarmService.getAllFarms();
+    } catch (err) {
+        console.error(err);
+        container.innerHTML = `<p class="error-msg" role="alert">We couldn't load the farms. Please refresh the page.</p>`;
         return;
     }
 
-    selectedFarmId = farms[0].id;
-    selectedFarmName = farms[0].name;
+    // Case A: the visitor came from a farm page (?farmId=...)
+    const wantedId = getParam("farmId") || getParam("id");
+    selectedFarm = farms.find((f) => String(f.id) === String(wantedId)) || null;
+    if (selectedFarm) {
+        container.innerHTML = selectedFarmCardHTML(selectedFarm);
+        return;
+    }
 
-    let optionsHTML = farms.map(f => 
-        `<option value="${f.id}">${f.name} (${f.location || f.province})</option>`
-    ).join('');
-
+    // Case B: came from the navbar. no URL passed.
     container.innerHTML = `
         <div class="farm-select-dropdown-box">
-            <label for="farm-dropdown"><strong>Select a Farm to Visit:</strong></label>
+            <label for="farm-dropdown"><strong>Select a farm to visit:</strong></label>
             <select id="farm-dropdown" class="form-select full-width">
-                ${optionsHTML}
+                <option value="">Choose a farm</option>
+                ${farms.map((f) => `<option value="${escapeHTML(f.id)}">${escapeHTML(f.name)} (${escapeHTML(f.location)})</option>`).join("")}
             </select>
-        </div>
-    `;
+        </div>`;
 
-    document.getElementById("farm-dropdown")?.addEventListener("change", (e) => {
-        selectedFarmId = e.target.value;
-        const chosenFarm = farms.find(f => f.id === selectedFarmId);
-        if (chosenFarm) {
-            selectedFarmName = chosenFarm.name;
-        }
+    $("#farm-dropdown").addEventListener("change", (e) => {
+        selectedFarm = farms.find((f) => String(f.id) === e.target.value) || null;
     });
 }
 
+function showError(message) {
+    let box = $("#form-error");
+    if (!box) {
+        box = document.createElement("p");
+        box.id = "form-error";
+        box.className = "error-msg";
+        box.setAttribute("role", "alert");
+    }
+    
+    const actions = $(".step-panel.active .step-actions");
+    if (actions) actions.before(box);
+    else $("#multi-step-reservation-form").prepend(box);
+
+    box.textContent = message;
+    box.hidden = !message;
+    if (message) box.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+
 function nextStep(stepNumber) {
+    showError("");
+
     if (stepNumber === 2) {
-        const date = document.getElementById("visit-date").value;
-        const slot = document.getElementById("selected-slot").value;
-        if (!date || !slot) {
-            alert("Please select both a visit date and a time slot to continue.");
-            return;
-        }
+        if (!selectedFarm) return showError("Please choose a farm.");
+        if (!$("#visit-date").value) return showError("Please choose a visit date.");
+        if (!selectedSlot) return showError("Please choose a time slot.");
     }
 
-    document.querySelectorAll(".step-panel").forEach(panel => panel.classList.remove("active"));
-    document.getElementById(`step-${stepNumber}`).classList.add("active");
+    $$(".step-panel").forEach((panel) => panel.classList.remove("active"));
+    $(`#step-${stepNumber}`).classList.add("active");
 
-    document.querySelectorAll(".step-item").forEach((item, index) => {
-        item.classList.toggle("active", index + 1 === stepNumber);
+    $$(".step-item").forEach((item, index) => {
+        const isCurrent = index + 1 === stepNumber;
+        item.classList.toggle("active", isCurrent);
+        if (isCurrent) item.setAttribute("aria-current", "step");
+        else item.removeAttribute("aria-current");
     });
 }
 
 async function submitReservation() {
-    const name = document.getElementById("visitor-name")?.value;
-    const email = document.getElementById("visitor-email")?.value;
-    const phone = document.getElementById("visitor-phone")?.value;
-    const date = document.getElementById("visit-date")?.value;
-    const slot = document.getElementById("selected-slot")?.value;
-    const guests = parseInt(document.getElementById("visitor-count")?.value || "1", 10);
+    showError("");
 
-    if (!name || !email || !phone || !date || !slot) {
-        alert("Please complete all visitor and reservation details.");
+    const invalid = $$("#step-2 input, #step-2 select").find((field) => !field.checkValidity());
+    if (invalid) {
+        const label = invalid.labels?.[0]?.textContent || invalid.name || "a field";
+        showError(`Please check "${label}": ${invalid.validationMessage}`);
+        invalid.focus();
         return;
     }
 
-    const { data, error } = await supabase
-        .from('reservations')
-        .insert([
-            {
-                farm_id: selectedFarmId,
-                visitor_name: name,
-                visitor_email: email,
-                visitor_phone: phone,
-                visit_date: date,
-                time_slot: slot,
-                guest_count: guests
-            }
-        ])
-        .select();
+    const button = $("#step-2 .btn-primary");
+    button.disabled = true;
 
-    if (error || !data || data.length === 0) {
-        console.error("Supabase Error:", error);
-        alert("Reservation failed: " + (error?.message || "Unknown error"));
-        return;
+    try {
+        const reservation = await AppController.submitReservation({
+            farm_id: selectedFarm?.id,
+            visitor_name: $("#visitor-name").value,
+            visitor_email: $("#visitor-email").value,
+            visitor_phone: $("#visitor-phone").value,
+            visit_date: $("#visit-date").value,
+            time_slot: selectedSlot,
+            guest_count: $("#visitor-count").value,
+            idempotency_key: idempotencyKey
+        });
+        showTicket(reservation);
+        nextStep(3);
+    } catch (err) {
+        console.error("Reservation failed:", err);
+        showError(err.message);
+        button.disabled = false;
     }
+}
 
-    const newReservation = data[0];
-    const reservationId = newReservation.id;
+function showTicket(reservation) {
+    $("#ticket-farm").textContent = selectedFarm.name;
+    $("#ticket-name").textContent = reservation.visitorName;
+    $("#ticket-date").textContent = new Date(`${reservation.visitDate}T00:00`).toLocaleDateString("en-PH", {
+        weekday: "long", day: "numeric", month: "long", year: "numeric"
+    });
+    $("#ticket-slot").textContent = reservation.timeSlot;
+    $("#ticket-guests").textContent = reservation.guestCount;
+    const ref = $("#ticket-ref");
+    if (ref) ref.textContent = reservation.idempotencyKey.slice(0, 8).toUpperCase();
 
-    document.getElementById("ticket-farm").textContent = selectedFarmName;
-    document.getElementById("ticket-name").textContent = name;
-    document.getElementById("ticket-date").textContent = date;
-    document.getElementById("ticket-slot").textContent = slot;
-    document.getElementById("ticket-guests").textContent = guests;
-
-    const qrImg = document.querySelector(".ticket-qr img");
-    if (qrImg) {
-        const qrData = encodeURIComponent(`SAGANA-TICKET:${reservationId}`);
-        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${qrData}`;
+    const qrImage = $(".ticket-qr img");
+    if (!qrImage) return;
+    if (typeof qrcode === "function") {
+        const qr = qrcode(0, "M");
+        qr.addData(`SAGANA-TICKET:${reservation.idempotencyKey}`);
+        qr.make();
+        qrImage.src = qr.createDataURL(5, 2);
+        qrImage.alt = "Check-in QR code for your reservation";
+    } else {
+        qrImage.hidden = true;
     }
-
-    nextStep(3);
 }
