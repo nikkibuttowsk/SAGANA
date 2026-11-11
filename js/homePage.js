@@ -4,6 +4,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
 let leafletMap = null;
 
+function escapeHTML(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
 async function fetchHomePageData() {
     try {
         // Delegate fetching to AppController facade
@@ -14,13 +24,9 @@ async function fetchHomePageData() {
             return;
         }
 
-        // 1. Populate Popular Farms Section
+        // populate homepage
         renderPopularFarms(homeData.popularFarms);
-
-        // 2. Populate Hero Carousel
         renderHeroCarousel(homeData.trendingNews);
-
-        // 3. Populate Leaflet Map Pins
         renderMapPins(homeData.allFarms);
 
     } catch (err) {
@@ -36,6 +42,12 @@ function renderPopularFarms(farms) {
     popularGrid.innerHTML = "";
 
     farms.slice(0, 3).forEach(farm => {
+        const farmID = escapeHTML(farm.id);
+        const name = escapeHTML(farm.name);
+        const location = escapeHTML(farm.location);
+        const crops = escapeHTML(farm.getFormattedCrops());
+        const coverPhoto = escapeHTML(farm.getCoverPhoto());
+
         popularGrid.innerHTML += `
             <article class="farm-card">
                 <a href="pages/farm.html?id=${farm.id}">
@@ -60,6 +72,8 @@ function renderHeroCarousel(farms) {
 
     farms.forEach((farm, index) => {
         const activeClass = index === 0 ? "active" : "";
+        const farmID = escapeHTML(farm.id);
+        const name = escapeHTML(farm.name);
         const headlineText = farm.headline || `${farm.name} Opens Peak Season Tours`;
         const newsSummary = farm.newsSummary || farm.description || 'Discover fresh fruit picking and harvest updates from this farm.';
 
@@ -117,6 +131,11 @@ function renderMapPins(farms) {
 
     farms.forEach(farm => {
         if (farm.latitude && farm.longitude) {
+            const farmID = escapeHTML(farm.id);
+            const name = escapeHTML(farm.name);
+            const location = escapeHTML(farm.location);
+            const crops = escapeHTML(farm.getFormattedCrops());
+            
             const marker = L.marker([farm.latitude, farm.longitude]).addTo(leafletMap);
 
             const popupContent = `
