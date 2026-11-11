@@ -33,20 +33,27 @@ function distanceKm(lat1, lng1, lat2, lng2) {
     return 12742 * Math.asin(Math.sqrt(a));
 }
 
-function farmCardHTML(farm, km = null) {
-    const distance = km === null ? "" : `<p class="distance">${km.toFixed(1)} km away</p>`;
-    return `
-        <article class="farm-card">
-            <a href="${PAGES_ROOT}farm.html?id=${encodeURIComponent(farm.id)}">
-                <img src="${escapeHTML(assetUrl(farm.getCoverPhoto()))}" alt="" loading="lazy">
-                <div class="card-info">
-                    <h3>${escapeHTML(farm.name)}</h3>
-                    <p class="location">${escapeHTML(farm.location)}</p>
-                    <span class="tag">${escapeHTML(farm.getFormattedCrops())}</span>
-                    ${distance}
-                </div>
-            </a>
-        </article>`;
+function h(tag, props = {}, ...children) {
+    const node = document.createElement(tag);
+    for (const [key, value] of Object.entries(props)) {
+        if (value === null || value === undefined || value === false) continue;
+        if (key === "class") node.className = value;
+        else if (key === "text") node.textContent = value;
+        else node.setAttribute(key, value === true ? "" : value);
+    }
+    node.append(...children.flat().filter((child) => child !== null && child !== undefined && child !== false));
+    return node;
+}
+
+function createFarmCard(farm, km = null) {
+    return h("article", { class: "farm-card" },
+        h("a", { href: `${PAGES_ROOT}farm.html?id=${encodeURIComponent(farm.id)}` },
+            h("img", { src: assetUrl(farm.getCoverPhoto()), alt: "", loading: "lazy" }),
+            h("div", { class: "card-info" },
+                h("h3", { text: farm.name }),
+                h("p", { class: "location", text: farm.location }),
+                h("span", { class: "tag", text: farm.getFormattedCrops() }),
+                km === null ? null : h("p", { class: "distance", text: `${km.toFixed(1)} km away` }))));
 }
 
 document.addEventListener("error", (e) => {

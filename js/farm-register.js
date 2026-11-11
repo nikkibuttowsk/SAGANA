@@ -35,12 +35,11 @@ async function handleFarmRegistration(e) {
             images: /^https:\/\//i.test(imageUrl) ? [imageUrl] : ["images/default-farm.jpg"]
         });
 
-        form.innerHTML = `
-            <section role="status">
-                <h2>Thank you!</h2>
-                <p>Your farm listing was submitted.</p>
-                <p><a href="farm-list.html" class="btn btn-primary">Browse farms</a></p>
-            </section>`;
+        form.replaceChildren(
+            h("section", { role: "status" },
+                h("h2", { text: "Thank you!" }),
+                h("p", { text: "Your farm listing was submitted." }),
+                h("p", {}, h("a", { class: "btn btn-primary", href: "farm-list.html", text: "Browse farms" }))));
     } catch (err) {
         console.error("Farm registration error:", err);
         alert("We couldn't submit your farm: " + err.message);

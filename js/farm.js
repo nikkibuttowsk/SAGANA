@@ -5,8 +5,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     currentFarm = await FarmService.getFarmById(getParam("id"));
 
     if (!currentFarm) {
-        $("#main-content").innerHTML = `
-            <p class="error-msg" role="alert">We couldn't find that farm. <a href="farm-list.html">Browse all farms</a></p>`;
+        $("#main-content").replaceChildren(
+            h("p", { class: "error-msg", role: "alert" },
+                "We couldn't find that farm. ", h("a", { href: "farm-list.html", text: "Browse all farms" })));
         return;
     }
     renderFarm(currentFarm);
@@ -28,7 +29,7 @@ function renderFarm(farm) {
 
     // Only show activities the farm actually has (the old page showed Baguio's activities on every farm)
     if (farm.activities.length > 0) {
-        $("#farm-activities").innerHTML = farm.activities.map((a) => `<li>${escapeHTML(a)}</li>`).join("");
+        $("#farm-activities").replaceChildren(...farm.activities.map((a) => h("li", { text: a })));
         $("#activities-section").hidden = false;
     }
 
@@ -43,21 +44,16 @@ function renderMedia(farm) {
     const video = farm.videoUrl ? assetUrl(farm.videoUrl) : null;
 
     if (video && video !== DEFAULT_IMAGE) {
-        slides.push(`
-            <div class="carousel-slide" data-type="video">
-                <video controls preload="metadata" poster="${escapeHTML(assetUrl(farm.getCoverPhoto()))}">
-                    <source src="${escapeHTML(video)}" type="video/mp4">
-                    Your browser does not support video playback.
-                </video>
-                <span class="slide-badge">Video walkthrough</span>
-            </div>`);
+        slides.push(h("div", { class: "carousel-slide", "data-type": "video" },
+            h("video", { controls: true, preload: "metadata", poster: assetUrl(farm.getCoverPhoto()) },
+                h("source", { src: video, type: "video/mp4" })),
+            h("span", { class: "slide-badge", text: "Video walkthrough" })));
     }
-    farm.images.forEach((src, i) => slides.push(`
-        <div class="carousel-slide" data-type="photo">
-            <img src="${escapeHTML(assetUrl(src))}" alt="${escapeHTML(farm.name)} photo ${i + 1}">
-        </div>`));
+    farm.images.forEach((src, i) => slides.push(
+        h("div", { class: "carousel-slide", "data-type": "photo" },
+            h("img", { src: assetUrl(src), alt: `${farm.name} photo ${i + 1}` }))));
 
-    $("#media-wrapper").innerHTML = slides.join("");
+    $("#media-wrapper").replaceChildren(...slides);
 }
 
 function setupCarousel() {
@@ -66,7 +62,7 @@ function setupCarousel() {
 
     let current = 0;
     const show = (index) => {
-        slides[current].querySelector("video")?.pause(); // stop the video when leaving it
+        slides[current].querySelector("video")?.pause(); 
         slides[current].classList.remove("active");
         current = (index + slides.length) % slides.length;
         slides[current].classList.add("active");

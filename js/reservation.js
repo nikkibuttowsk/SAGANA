@@ -27,15 +27,13 @@ document.addEventListener("DOMContentLoaded", () => {
     initializeFarmSelection();
 });
 
-const selectedFarmCardHTML = (farm) => `
-    <div class="selected-farm-card">
-        <img src="${escapeHTML(assetUrl(farm.getCoverPhoto()))}" alt="">
-        <div>
-            <h2>${escapeHTML(farm.name)}</h2>
-            <p>${escapeHTML(farm.location)} &bull; Crops: ${escapeHTML(farm.getFormattedCrops())}</p>
-        </div>
-        <a href="farm-list.html" class="change-farm-btn">Change farm</a>
-    </div>`;
+const createSelectedFarmCard = (farm) =>
+    h("div", { class: "selected-farm-card" },
+        h("img", { src: assetUrl(farm.getCoverPhoto()), alt: "" }),
+        h("div", {},
+            h("h2", { text: farm.name }),
+            h("p", { text: `${farm.location} \u2022 Crops: ${farm.getFormattedCrops()}` })),
+        h("a", { class: "change-farm-btn", href: "farm-list.html", text: "Change farm" }));
 
 async function initializeFarmSelection() {
     const container = $("#farm-selection-container");
@@ -46,7 +44,8 @@ async function initializeFarmSelection() {
         farms = await FarmService.getAllFarms();
     } catch (err) {
         console.error(err);
-        container.innerHTML = `<p class="error-msg" role="alert">We couldn't load the farms. Please refresh the page.</p>`;
+        container.replaceChildren(
+            h("p", { class: "error-msg", role: "alert", text: "We couldn't load the farms. Please refresh the page." }));
         return;
     }
 
@@ -54,23 +53,22 @@ async function initializeFarmSelection() {
     const wantedId = getParam("farmId") || getParam("id");
     selectedFarm = farms.find((f) => String(f.id) === String(wantedId)) || null;
     if (selectedFarm) {
-        container.innerHTML = selectedFarmCardHTML(selectedFarm);
+        container.replaceChildren(createSelectedFarmCard(selectedFarm));
         return;
     }
 
     // Case B: came from the navbar. no URL passed.
-    container.innerHTML = `
-        <div class="farm-select-dropdown-box">
-            <label for="farm-dropdown"><strong>Select a farm to visit:</strong></label>
-            <select id="farm-dropdown" class="form-select full-width">
-                <option value="">Choose a farm</option>
-                ${farms.map((f) => `<option value="${escapeHTML(f.id)}">${escapeHTML(f.name)} (${escapeHTML(f.location)})</option>`).join("")}
-            </select>
-        </div>`;
-
-    $("#farm-dropdown").addEventListener("change", (e) => {
+    const select = h("select", { id: "farm-dropdown", class: "form-select full-width" },
+        new Option("Choose a farm", ""),
+        ...farms.map((f) => new Option(`${f.name} (${f.location})`, f.id)));
+    select.addEventListener("change", (e) => {
+        // option values are strings, so compare as strings
         selectedFarm = farms.find((f) => String(f.id) === e.target.value) || null;
     });
+    container.replaceChildren(
+        h("div", { class: "farm-select-dropdown-box" },
+            h("label", { for: "farm-dropdown" }, h("strong", { text: "Select a farm to visit:" })),
+            select));
 }
 
 function showError(message) {

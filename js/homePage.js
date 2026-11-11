@@ -1,4 +1,3 @@
-// js/homePage.js
 let leafletMap = null;
 
 document.addEventListener("DOMContentLoaded", fetchHomePageData);
@@ -29,21 +28,21 @@ function renderHeroCarousel(farms) {
     const track = $("#news-carousel-track");
     if (!track) return;
 
-    track.innerHTML = farms.map((farm, index) => `
-        <article class="slide news-slide ${index === 0 ? "active" : ""}">
-            <div class="slide-media">
-                <img src="${escapeHTML(assetUrl(farm.getCoverPhoto()))}" alt="">
-            </div>
-            <div class="slide-caption news-caption">
-                <span class="news-tag">${farm.isTrending ? "Trending" : "Featured"}</span>
-                <h3>${escapeHTML(farm.headline || `${farm.name} Opens Peak Season Tours`)}</h3>
-                <p class="summary-text">${escapeHTML(farm.newsSummary || farm.description)}</p>
-                <div class="news-footer">
-                    <span class="farm-source">Source: <strong>${escapeHTML(farm.name)}</strong></span>
-                    <a href="${PAGES_ROOT}farm.html?id=${encodeURIComponent(farm.id)}" class="btn btn-sm btn-primary">Read story &amp; book a visit &rarr;</a>
-                </div>
-            </div>
-        </article>`).join("");
+    track.replaceChildren(...farms.map((farm, index) =>
+        h("article", { class: `slide news-slide${index === 0 ? " active" : ""}` },
+            h("div", { class: "slide-media" },
+                h("img", { src: assetUrl(farm.getCoverPhoto()), alt: "" })),
+            h("div", { class: "slide-caption news-caption" },
+                h("span", { class: "news-tag", text: farm.isTrending ? "Trending" : "Featured" }),
+                h("h3", { text: farm.headline || `${farm.name} Opens Peak Season Tours` }),
+                h("p", { class: "summary-text", text: farm.newsSummary || farm.description }),
+                h("div", { class: "news-footer" },
+                    h("span", { class: "farm-source" }, "Source: ", h("strong", { text: farm.name })),
+                    h("a", {
+                        class: "btn btn-sm btn-primary",
+                        href: `${PAGES_ROOT}farm.html?id=${encodeURIComponent(farm.id)}`,
+                        text: "Read story & book a visit \u2192"
+                    }))))));
 
     const slides = $$(".slide", track);
     if (slides.length < 2) return;
@@ -71,14 +70,14 @@ function renderMapPins(farms) {
     const pinned = farms.filter((farm) => farm.hasLocation());
     pinned.forEach((farm) => {
         // Popup text comes from the database, so it MUST be escaped
-        const popup = `
-            <div class="map-popup-card">
-                <h4>${escapeHTML(farm.name)}</h4>
-                <p><strong>Location:</strong> ${escapeHTML(farm.location)}<br>
-                <strong>Crops:</strong> ${escapeHTML(farm.getFormattedCrops())}</p>
-                <a href="${PAGES_ROOT}farm.html?id=${encodeURIComponent(farm.id)}" class="btn-popup">View farm &amp; book</a>
-                <a href="${escapeHTML(mapsUrl(farm))}" target="_blank" rel="noopener noreferrer">Get directions</a>
-            </div>`;
+        const popup = h("div", { class: "map-popup-card" },
+            h("h4", { text: farm.name }),
+            h("p", {},
+                h("strong", { text: "Location: " }), farm.location, h("br"),
+                h("strong", { text: "Crops: " }), farm.getFormattedCrops()),
+            h("a", { class: "btn-popup", href: `${PAGES_ROOT}farm.html?id=${encodeURIComponent(farm.id)}`, text: "View farm & book" }),
+            " ",
+            h("a", { href: mapsUrl(farm), target: "_blank", rel: "noopener noreferrer", text: "Get directions" }));
         L.marker([farm.latitude, farm.longitude]).addTo(leafletMap).bindPopup(popup);
     });
 

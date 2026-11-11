@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    $("#use-location-btn")?.insertAdjacentHTML("afterend", `<p id="location-status" role="status"></p>`);
+    $("#use-location-btn")?.after(h("p", { id: "location-status", role: "status" }));
 
     renderFarmsGrid(allFarms);
     $("#farm-search-input")?.addEventListener("input", (e) => renderFarmsGrid(filterFarms(e.target.value)));
@@ -26,6 +26,7 @@ function fillGrid(id, farms, withDistance = false, emptyText = "No farms to show
 }
 
 function renderFarmsGrid(farms) {
+    const searching = Boolean($("#farm-search-input")?.value.trim());
     if (userPos) {
         const nearest = farms
             .filter((f) => f.hasLocation())
