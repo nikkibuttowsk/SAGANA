@@ -4,22 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register Your Farm - SAGANA</title>
-    <link rel="stylesheet" href="css/style.css">
     
-    <!-- Supabase CDN & Client Config -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabaseClient.js"></script>
-    <script src="js/farm-register.js" defer></script>
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <!-- Third party libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nXCdaDQFBvhJ00B586XBi649965Zu3LRE0uB07dJ0=" crossorigin="" defer></script>
+
+    <!-- Supabase connection -->
+    <script src="../js/supabaseClient.js" defer></script>
+    <script src="../js/utils.js" defer></script>
+
+    <!-- Backend scripts -->
+    <script src="../js/models/FarmModel.js" defer></script>
+    <script src="../js/models/ReservationModel.js" defer></script>
+    <script src="../js/services/FarmService.js" defer></script>
+    <script src="../js/services/ReservationService.js" defer></script>
+    <script src="../js/controllers/AppController.js" defer></script>
+
+    <script src="..js/farm-register.js" defer></script>
 </head>
 <body class="bg-light">
     <header id="site-header">
-        <a href="homePage.html" class="logo-link">
+        <a href="../homePage.html" class="logo-link">
             <img src="images/logo.png" alt="SAGANA Logo" id="logo">
             <span>Fruit Farms PH</span>
         </a>
         <nav aria-label="Main navigation">
             <ul>
-                <li><a href="homePage.html">Home</a></li>
+                <li><a href="../homePage.html">Home</a></li>
                 <li><a href="farm-list.html">Farms</a></li>
                 <li><a href="reservation.html">Reservation</a></li>
             </ul>
@@ -123,8 +138,8 @@
     <footer id="site-footer">
         <nav aria-label="Footer navigation">
             <ul>
-                <li><a href="#about">About</a></li>
-                <li><a href="#suggested-farms">Farms</a></li>
+                <li><a href="../homePage.html#about">About</a></li>
+                <li><a href="../homePage.html#suggested-farms">Farms</a></li>
                 <li><a href="#">Privacy policy</a></li>
                 <li><a href="#">Terms of use</a></li>
             </ul>

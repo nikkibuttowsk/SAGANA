@@ -4,48 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Farm</title>
-    <link rel="stylesheet" href="css/draftDesign.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabaseClient.js"></script>
-    <script src="js/farm.js"></script>
+
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="../js/supabaseClient.js" defer></script>
+    <script src="../js/utils.js" defer></script>
+    <!-- Backend scripts -->
+    <script src="../js/models/FarmModel.js" defer></script>
+    <script src="../js/models/ReservationModel.js" defer></script>
+    <script src="../js/services/FarmService.js" defer></script>
+    <script src="../js/services/ReservationService.js" defer></script>
+    <script src="../js/controllers/AppController.js" defer></script>
+
+    <script src="../js/farm.js" defer></script>
 </head>
 <body>
     <a href="#main-content">Skip to main content</a>
 
     <header id="site-header">
-        <a href="homePage.html" aria-label="Home Page">
+        <a href="../homePage.html" aria-label="SAGANA home">
             <img src="images/logo.png" alt="Farm Logo" id="logo">
             <span>Fruit Farms PH</span>
         </a>
 
         <nav aria-label="Main navigation">
             <ul>
-                <li><a href="homePage.html#hero">Home</a></li>
-                <li><a href="homePage.html#about">About</a></li>
-                <li><a href="farm-list.html">Farms</a></li>
+                <li><a href="../homePage.html#hero">Home</a></li>
+                <li><a href="../homePage.html#about">About</a></li>
+                <li><a href="farm-list.html" aria-current="page">Farms</a></li>
                 <li><a href="reservation.html">Reservation</a></li>
             </ul>
         </nav>
     </header>
 
     <main id="main-content" class="farm-page-container">
+
+        <!-- visuals container-->
         <div class="farm-primary-content">
             <section class="media-carousel-container">
-                <div class="carousel-wrapper">
-                    <div class="carousel-slide active" data-type="video">
-                        <video controls poster="images/video-poster.jpg">
-                            <source src="videos/walkthrough.mp4" type="video/mp4">
-                            Your browser does not support video playbacks.
-                        </video>
-                        <span class="slide-badge">Video Walkthrough</span>
-                    </div>
-                    <div class="carousel-slide" data-type="photo">
-                        <img src="images/farm-photo-1.jpg" alt="Strawberry Fields">
-                    </div>
-                    <div class="carousel-slide" data-type="photo">
-                        <img src="images/farm-photo-2.jpg" alt="Harvest Area">
-                    </div>
-                </div>
+                <div class="carousel-wrapper" id="media-wrapper"></div> <!-- container: dynamically populated  -->
                 <button type="button" class="carousel-control prev" id="media-prev">&lsaquo;</button>
                 <button type="button" class="carousel-control next" id="media-next">&rsaquo;</button>
             </section>
@@ -53,41 +50,40 @@
 
         <aside class="farm-info-sidebar">
             <div class="sidebar-card">
-                <h1>Baguio Strawberry Farm</h1>
-                <p class="location-sub">Baguio City, Benguet</p>
+                <h1 id="farm-name">Loading...</h1>
+                <p class="location-sub" id="farm-location"></p>
                 <hr>
 
-                <h3>About the Farm</h3>
-                <p>Experience hands-on fruit picking and enjoy fresh strawberry treats direct from local farm patches.</p>
+                <section>
+                    <h3>About the Farm</h3>
+                    <p id="farm-description"></p>
+                </section>
+                
 
                 <dl class="info-list">
                     <dt>Main Crops</dt>
-                    <dd>Strawberries, Fresh Lettuce</dd>
+                    <dd id="farm-crops"></dd>
 
                     <dt>Bearing Season</dt>
-                    <dd>November to May</dd>
+                    <dd id="farm-bearing"></dd>
 
                     <dt>Opening Hours</dt>
-                    <dd>Mon - Sun: 7:00 AM - 6:00 PM</dd>
+                    <dd id="farm-hours"></dd>
 
                     <dt>Entrance Fee</dt>
-                    <dd>₱50 / Person</dd>
+                    <dd id="farm-fee"></dd>
                 </dl>
 
-                <section class="farm-section">
+                <section class="farm-section" id="activities-section" hidden>
                     <h2>Farm Activities</h2>
-                    <ul class="activity-tags">
-                        <li>🍓 Fruit Picking</li>
-                        <li>🚜 Guided Farm Tour</li>
-                        <li>🥗 Organic Jam Workshop</li>
-                    </ul>
+                    <ul class="activity-tags"></ul>
                 </section>
 
                 <a href="https://www.google.com/maps/search/?api=1&query=Baguio+Strawberry+Farm" target="_blank" rel="noopener noreferrer" class="btn btn-outline full-width">
                     Open in Google Maps
                 </a>
 
-                <a href="reservation.html?farmId=baguio-strawberry" class="btn btn-primary full-width mt-2">
+                <a id="reserve-link" href="reservation.html?farmId=baguio-strawberry" class="btn btn-primary full-width mt-2">
                     Reserve Visit Now
                 </a>
 
@@ -108,7 +104,7 @@
     <footer id="site-footer">
         <nav aria-label="Footer navigation">
             <ul>
-                <li><a href="homePage.html#about">About</a></li>
+                <li><a href="../homePage.html#about">About</a></li>
                 <li><a href="#">Privacy policy</a></li>
                 <li><a href="#">Terms of use</a></li>
             </ul>

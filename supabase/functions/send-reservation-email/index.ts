@@ -1,94 +1,82 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const BREVO_API_KEY = Deno.env.get("BREVO_API_KEY");
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
 
 serve(async (req) => {
-  // CORS handling for browser calls (if called directly)
   if (req.method === "OPTIONS") {
-    return new Response("ok", {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-      },
-    });
+    return new Response("ok", { headers: corsHeaders });
   }
 
   try {
-    const payload = await req.json();
-    
-    // When called via Database Webhook, the inserted row is under 'record'
-    const record = payload.record || payload; 
+    const { record } = await req.json();
 
-    const { visitor_name, visitor_email, visitor_phone, visit_date, time_slot, guest_count, farm_name, admin_email } = record;
+    const BREVO_API_KEY = Deno.env.get("BREVO_API_KEY");
+    if (!BREVO_API_KEY) {
+      throw new Error("BREVO_API_KEY environment secret is not set.");
+    }
 
-    // 1. Email to Visitor
-    const visitorEmailBody = {
-      sender: { name: "SAGANA Fruit Farms", email: "sagana077@gmail.com" }, // Replace with your verified Brevo sender email
-      to: [{ email: visitor_email, name: visitor_name }],
-      subject: `Reservation Request: ${farm_name || 'Farm Visit'}`,
-      htmlContent: `
-        <h2>Mabuhay, ${visitor_name}!</h2>
-        <p>Thank you for submitting your reservation request.</p>
-        <ul>
-          <li><strong>Visit Date:</strong> ${visit_date}</li>
-          <li><strong>Time Slot:</strong> ${time_slot}</li>
-          <li><strong>Guests:</strong> ${guest_count}</li>
-          <li><strong>Mobile:</strong> ${visitor_phone}</li>
-        </ul>
-        <p>Here is your digital ticket QR code for check-in at the farm entrance:</p>
-        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=SAGANA-TICKET-${record.id}" alt="Digital Ticket QR Code" />
-        <p><strong>Reservation Reference ID:</strong> ${record.id}</p>
-        <p>The farm administration will reach out to confirm your booking.</p>
-      `
-    };
+    // Generate dynamic QR code URL based on reservation ID / idempotency key
+    const reservationRef = record.idempotency_key || record.id;
+    const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(`SAGANA-TICKET:${reservationRef}`)}`;
 
-    // 2. Email to Farm Admin
-    const adminEmailBody = {
-      sender: { name: "SAGANA System", email: "sagana077@gmail.com" },
-      to: [{ email: admin_email || "admin@example.com", name: "Farm Admin" }],
-      subject: `[NEW RESERVATION] ${visitor_name} requested a visit`,
-      htmlContent: `
-        <h2>New Visit Reservation</h2>
-        <p>A new visitor has booked a slot:</p>
-        <ul>
-          <li><strong>Name:</strong> ${visitor_name}</li>
-          <li><strong>Email:</strong> ${visitor_email}</li>
-          <li><strong>Phone:</strong> ${visitor_phone}</li>
-          <li><strong>Date:</strong> ${visit_date}</li>
-          <li><strong>Time Slot:</strong> ${time_slot}</li>
-          <li><strong>Guests:</strong> ${guest_count}</li>
-        </ul>
-      `
-    };
-
-    // Send to Visitor via Brevo
-    await fetch("https://api.brevo.com/v3/smtp/email", {
+    // Send Email via Brevo REST API
+    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
       method: "POST",
       headers: {
         "accept": "application/json",
-        "api-key": BREVO_API_KEY || "",
-        "content-type": "application/json"
+        "api-key": BREVO_API_KEY,
+        "content-type": "application/json",
       },
-      body: JSON.stringify(visitorEmailBody)
+      body: JSON.stringify({
+        sender: { name: "SAGANA Fruit Farms", email: "sagana077@gmail.com" },
+        to: [{ email: record.visitor_email, name: record.visitor_name }],
+        subject: `Your Digital Ticket & Confirmation - SAGANA Farm Visit`,
+        htmlContent: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; padding: 24px; background-color: #ffffff;">
+            <h2 style="color: #2e7d32; margin-top: 0;">Reservation Confirmed! 🌿</h2>
+            <p>Hi <strong>${record.visitor_name}</strong>,</p>
+            <p>Your visit has been successfully booked. Please present this email or your QR code upon arrival at the farm entry gate.</p>
+            
+            <hr style="border: 0; border-top: 1px solid #eeeeee; margin: 20px 0;" />
+            
+            <table style="width: 100%; border-collapse: collapse;">
+              <tr>
+                <td style="vertical-align: top; padding-right: 15px;">
+                  <h3 style="margin: 0 0 10px 0; color: #333;">Visit Details</h3>
+                  <p style="margin: 4px 0;"><strong>Date:</strong> ${record.visit_date}</p>
+                  <p style="margin: 4px 0;"><strong>Time Slot:</strong> ${record.time_slot}</p>
+                  <p style="margin: 4px 0;"><strong>Guests:</strong> ${record.guest_count}</p>
+                  <p style="margin: 4px 0; color: #666; font-size: 0.85em;">Ref ID: ${String(reservationRef).slice(0, 8).toUpperCase()}</p>
+                </td>
+                <td style="text-align: center; vertical-align: middle; width: 180px;">
+                  <img src="${qrCodeUrl}" alt="Digital Ticket QR Code" width="160" height="160" style="display: block; margin: 0 auto; border: 1px solid #dddddd; padding: 6px; border-radius: 6px;" />
+                  <span style="font-size: 11px; color: #888888; display: block; margin-top: 4px;">Entry Check-in QR</span>
+                </td>
+              </tr>
+            </table>
+
+            <hr style="border: 0; border-top: 1px solid #eeeeee; margin: 20px 0;" />
+            <p style="font-size: 13px; color: #777777; margin-bottom: 0;">Thank you for supporting local agritourism with SAGANA!</p>
+          </div>
+        `,
+      }),
     });
 
-    // Send to Farm Admin via Brevo
-    await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      headers: {
-        "accept": "application/json",
-        "api-key": BREVO_API_KEY || "",
-        "content-type": "application/json"
-      },
-      body: JSON.stringify(adminEmailBody)
-    });
+    const data = await response.json();
 
-    return new Response(JSON.stringify({ success: true }), {
-      headers: { "Content-Type": "application/json" },
+    return new Response(JSON.stringify({ success: true, data }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
 
   } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), { status: 500 });
+    return new Response(JSON.stringify({ error: err.message }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 400,
+    });
   }
 });
