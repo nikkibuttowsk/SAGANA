@@ -4,12 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SAGANA: Farm PH</title>
-    <link rel="stylesheet" href="/css/style.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabaseClient.js"></script>
-    <script src="/js/homePage.js" defer></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nXCdaDQFBvhJ00B586XBi649965Zu3LRE0uB07dJ0=" crossorigin=""></script>
+
+    <!-- Third party libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nXCdaDQFBvhJ00B586XBi649965Zu3LRE0uB07dJ0=" crossorigin="" defer></script>
+
+    <!-- Supabase connection -->
+    <script src="../js/supabaseClient.js" defer></script>
+
+    <!-- Backend scripts -->
+    <script src="../js/models/FarmModel.js" defer></script>
+    <script src="../js/models/ReservationModel.js" defer></script>
+    <script src="../js/services/FarmService.js" defer></script>
+    <script src="../js/services/ReservationService.js" defer></script>
+    <script src="../js/controllers/AppController.js" defer></script>
+
+    <script src="../js/homePage.js" defer></script>
 </head>
 <body>
     
@@ -25,15 +39,15 @@
             <ul>
                 <li><a href="#hero">Home</a></li>
                 <li><a href="#about">About</a></li>
-                <li><a href="farm-list.html">Farms</a></li>
+                <li><a href="/pages/farm-list.html">Farms</a></li>
                 <li><a href="#map-section">Map</a></li>
-                <li><a href="reservation.html">Reservation</a></li>
+                <li><a href="/pages/reservation.html">Reservation</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
 
         <search>
-            <form action="farm.html" method="get" role="search">
+            <form action="/pages/farm-list.html" method="get" role="search">
                 <label for="site-search">Search farms</label>
                 <input type="search" id="site-search" name="q" placeholder="Fruit, farm name, or province">
                 <button type="submit">Search</button>
@@ -51,8 +65,8 @@
             </div>
 
             <search>
-                <form action="farms.html" method="get" role="search">
-                    <label for="site-search"></label>
+                <form action="/pages/farm-list.html" method="get" role="search">
+                    <label for="hero-site-search"></label>
                     <input type="search" id="site-search" name="q" placeholder="Fruit, farm name, or province">
                     <button type="submit">Search</button>
                 </form>
@@ -77,13 +91,13 @@
         <section id="suggested-farms">
             <div class="section-header-flex">
                 <h2>Popular Right Now</h2>
-                <a href="farm-list.html" class="btn btn-outline btn-sm">Browse All Farms &rarr;</a>
+                <a href="/pages/farm-list.html" class="btn btn-outline btn-sm">Browse All Farms &rarr;</a>
             </div>
 
             <div class="farm-grid"></div>
 
             <div class="view-all-container">
-                <a href="farm-list.html" class="btn btn-primary btn-lg">Browse All Farms in PH &rarr;</a>
+                <a href="/pages/farm-list.html" class="btn btn-primary btn-lg">Browse All Farms in PH &rarr;</a>
             </div>
         </section>
 
@@ -95,7 +109,7 @@
                     <p>Reserve your visit ahead of time to secure tour slots, fruit picking passes, and fresh harvests!</p>
                 </div>
                 <div class="cta-action">
-                    <a href="reservation.html" class="btn btn-primary btn-lg">Book Your Visit Now</a>
+                    <a href="/pages/reservation.html" class="btn btn-primary btn-lg">Book Your Visit Now</a>
                 </div>
             </div>
         </section>
@@ -116,17 +130,17 @@
             <p>SAGANA connects travelers and fruit lovers to authentic local agritourism experiences across the Philippines.</p>
             <div class="team-grid">
                 <article class="team-card">
-                    <img src="images/team1.jpg" alt="Nikki Limboc">
+                    <img src="/images/team1.jpg" alt="Nikki Limboc">
                     <h4>Nikki Limboc</h4>
                     <p>Lead Developer</p>
                 </article>
                 <article class="team-card">
-                    <img src="images/team2.jpg" alt="Julian Carlo Magbuhat">
+                    <img src="/images/team2.jpg" alt="Julian Carlo Magbuhat">
                     <h4>Julian Carlo Magbuhat</h4>
                     <p>UI/UX Designer</p>
                 </article>
                 <article class="team-card">
-                    <img src="images/team3.jpg" alt="Christine Nicole Miranda">
+                    <img src="/images/team3.jpg" alt="Christine Nicole Miranda">
                     <h4>Christine Nicole Miranda</h4>
                     <p>Project Lead</p>
                 </article>
@@ -176,7 +190,7 @@
                         <li>📍 Free interactive map listing</li>
                     </ul>
 
-                    <a href="farm-register.html" class="btn btn-secondary btn-lg full-width">Register Your Farm Now &rarr;</a>
+                    <a href="/pages/farm-register.html" class="btn btn-secondary btn-lg full-width">Register Your Farm Now &rarr;</a>
                 </div>
             </div>
         </section>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Your Farm - SAGANA</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <!-- Third party libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nXCdaDQFBvhJ00B586XBi649965Zu3LRE0uB07dJ0=" crossorigin="" defer></script>
+
+    <!-- Supabase connection -->
+    <script src="../js/supabaseClient.js" defer></script>
+
+    <!-- Backend scripts -->
+    <script src="../js/models/FarmModel.js" defer></script>
+    <script src="../js/models/ReservationModel.js" defer></script>
+    <script src="../js/services/FarmService.js" defer></script>
+    <script src="../js/services/ReservationService.js" defer></script>
+    <script src="../js/controllers/AppController.js" defer></script>
+
+    <script src="..js/farm-register.js" defer></script>
+</head>
+<body class="bg-light">
+    <header id="site-header">
+        <a href="../homePage.html" class="logo-link">
+            <img src="images/logo.png" alt="SAGANA Logo" id="logo">
+            <span>Fruit Farms PH</span>
+        </a>
+        <nav aria-label="Main navigation">
+            <ul>
+                <li><a href="../homePage.html">Home</a></li>
+                <li><a href="farm-list.html">Farms</a></li>
+                <li><a href="reservation.html">Reservation</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main id="main-content" class="registration-container">
+        <header class="page-title-banner">
+            <h1>Register Your Farm on SAGANA</h1>
+            <p>Fill out the details below to feature your agritourism destination on our platform.</p>
+        </header>
+
+        <form id="farm-registration-form" class="registration-card">
+            
+            <!-- Fieldset 1: General Farm Details -->
+            <fieldset class="form-fieldset">
+                <legend class="form-legend">Farm & Owner Details</legend>
+                
+                <div class="form-grid">
+                    <p class="form-field">
+                        <label for="reg-farm-name">Farm Name *</label>
+                        <input type="text" id="reg-farm-name" name="farm_name" required placeholder="e.g. Batangas Mango Orchard">
+                    </p>
+                    <p class="form-field">
+                        <label for="reg-province">Province / Region *</label>
+                        <input type="text" id="reg-province" name="province" required placeholder="e.g. Batangas">
+                    </p>
+                    <p class="form-field full-width">
+                        <label for="reg-location">Complete Address (Barangay, City) *</label>
+                        <input type="text" id="reg-location" name="location" required placeholder="e.g. Brgy. Sambat, Tanauan City, Batangas">
+                    </p>
+                    <p class="form-field">
+                        <label for="reg-admin-email">Admin Email (for booking alerts) *</label>
+                        <input type="email" id="reg-admin-email" name="admin_email" required placeholder="owner@farm.com">
+                    </p>
+                    <p class="form-field">
+                        <label for="reg-entrance-fee">Entrance Fee (PHP per person)</label>
+                        <input type="number" id="reg-entrance-fee" name="entrance_fee" min="0" placeholder="e.g. 100">
+                    </p>
+                </div>
+            </fieldset>
+
+            <!-- Fieldset 2: Harvest & Operations -->
+            <fieldset class="form-fieldset">
+                <legend class="form-legend">Harvest & Operations</legend>
+                
+                <div class="form-grid">
+                    <p class="form-field">
+                        <label for="reg-crops">Crops Grown (comma-separated) *</label>
+                        <input type="text" id="reg-crops" name="crops" required placeholder="Mango, Pineapple, Rambutan">
+                    </p>
+                    <p class="form-field">
+                        <label for="reg-season">Primary Season *</label>
+                        <select id="reg-season" name="season" required class="form-select">
+                            <option value="dry">Dry Season (Dec - May)</option>
+                            <option value="wet">Wet Season (Jun - Nov)</option>
+                            <option value="all">All Year Round</option>
+                        </select>
+                    </p>
+                    <p class="form-field">
+                        <label for="reg-bearing-season">Peak Bearing Months</label>
+                        <input type="text" id="reg-bearing-season" name="bearing_season" placeholder="e.g. March to June">
+                    </p>
+                    <p class="form-field">
+                        <label for="reg-hours">Operating Hours</label>
+                        <input type="text" id="reg-hours" name="hours" placeholder="e.g. Mon - Sun: 8:00 AM - 5:00 PM">
+                    </p>
+                    <p class="form-field full-width">
+                        <label for="reg-description">Farm Description & Activities</label>
+                        <textarea id="reg-description" name="description" rows="4" placeholder="Tell visitors what makes your farm special (e.g. fruit picking tours, organic products)..."></textarea>
+                    </p>
+                </div>
+            </fieldset>
+
+            <!-- Fieldset 3: Location Pins & Media -->
+            <fieldset class="form-fieldset">
+                <legend class="form-legend">Map Location & Media</legend>
+                
+                <div class="form-grid">
+                    <p class="form-field">
+                        <label for="reg-lat">Latitude (for Leaflet Map Pin)</label>
+                        <input type="number" step="any" id="reg-lat" name="latitude" placeholder="e.g. 13.7565">
+                    </p>
+                    <p class="form-field">
+                        <label for="reg-lng">Longitude (for Leaflet Map Pin)</label>
+                        <input type="number" step="any" id="reg-lng" name="longitude" placeholder="e.g. 121.0583">
+                    </p>
+                    <p class="form-field full-width">
+                        <label for="reg-image-url">Main Cover Photo (URL)</label>
+                        <input type="url" id="reg-image-url" name="image_url" placeholder="https://example.com/farm-photo.jpg">
+                    </p>
+                </div>
+            </fieldset>
+
+            <div class="form-actions mt-2">
+                <button type="submit" class="btn btn-primary btn-lg full-width">Submit Farm Listing</button>
+            </div>
+        </form>
+    </main>
+
+    <footer id="site-footer">
+        <nav aria-label="Footer navigation">
+            <ul>
+                <li><a href="../homePage.html#about">About</a></li>
+                <li><a href="../homePage.html#suggested-farms">Farms</a></li>
+                <li><a href="#">Privacy policy</a></li>
+                <li><a href="#">Terms of use</a></li>
+            </ul>
+        </nav>
+        <address>
+            Contact us: <a href="mailto:sagana077@gmail.com">sagana077@gmail.com</a>
+        </address>
+        <p><small>&copy; 2026 SAGANA: Fruit Farms PH. All rights reserved.</small></p>
+    </footer>
+</body>
+</html>
