@@ -21,7 +21,7 @@ async function fetchHomePageData() {
 function renderPopularFarms(farms) {
     const grid = $("#suggested-farms .farm-grid");
     if (!grid) return;
-    grid.innerHTML = farms.slice(0, 3).map((farm) => farmCardHTML(farm)).join("");
+    grid.replaceChildren(...farms.slice(0, 3).map((farm) => createFarmCard(farm)));
 }
 
 function renderHeroCarousel(farms) {

@@ -32,7 +32,7 @@ class FarmService {
             images: farm.images
         };
 
-        const { error } = await db.from(FARMS_SOURCE).insert([payload]).select();
+        const { data, error } = await db.from(FARMS_SOURCE).insert([payload]).select();
         if (error) throw new Error(error.message);
         return new FarmModel(data[0]);
     }

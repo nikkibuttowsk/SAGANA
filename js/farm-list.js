@@ -20,9 +20,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 function fillGrid(id, farms, withDistance = false, emptyText = "No farms to show.") {
     const grid = $(`#${id}`);
     if (!grid) return;
-    grid.innerHTML = farms.length
-        ? farms.map((f) => farmCardHTML(f, withDistance ? f.distanceFrom(userPos.lat, userPos.lng) : null)).join("")
-        : `<p class="empty-msg">${emptyText}</p>`;
+    grid.replaceChildren(
+        ...(farms.length
+            ? farms.map((f) => createFarmCard(f, withDistance && userPos ? f.distanceFrom(userPos.lat, userPos.lng) : null))
+            : [h("p", { class: "empty-msg", text: emptyText })])
+    );
 }
 
 function renderFarmsGrid(farms) {
