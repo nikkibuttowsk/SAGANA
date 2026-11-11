@@ -11,6 +11,7 @@ class FarmModel {
         this.entranceFee = data.entrance_fee ? Number(data.entrance_fee) : 0;
         this.hours = data.hours || '8:00 AM - 5:00 PM';
         this.description = data.description || 'Welcome to our fruit farm experience!';
+        this.activities = Array.isArray(data.activities) ? data.activities : [];
         this.headline = data.headline || null;
         this.newsSummary = data.news_summary || null;
         this.isTrending = Boolean(data.is_trending);
