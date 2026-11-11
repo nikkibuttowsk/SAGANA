@@ -8,6 +8,8 @@ class ReservationModel {
         this.visitDate = data.visit_date || '';
         this.timeSlot = data.time_slot || '';
         this.guestCount = data.guest_count ? parseInt(data.guest_count, 10) : 1;
+        // idempotency key
+        this.idempotencyKey = data.idempotency_key || `res_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     }
 
     validate() {
@@ -27,7 +29,8 @@ class ReservationModel {
             visitor_phone: this.visitorPhone,
             visit_date: this.visitDate,
             time_slot: this.timeSlot,
-            guest_count: this.guestCount
+            guest_count: this.guestCount,
+            idempotency_key: this.idempotencyKey
         };
     }
 }

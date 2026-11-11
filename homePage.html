@@ -6,7 +6,7 @@
     <title>SAGANA: Farm PH</title>
 
     <!-- CSS -->
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
     <!-- Third party libraries -->
@@ -14,16 +14,16 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nXCdaDQFBvhJ00B586XBi649965Zu3LRE0uB07dJ0=" crossorigin="" defer></script>
 
     <!-- Supabase connection -->
-    <script src="../js/supabaseClient.js" defer></script>
+    <script src="js/supabaseClient.js" defer></script>
 
     <!-- Backend scripts -->
-    <script src="../js/models/FarmModel.js" defer></script>
-    <script src="../js/models/ReservationModel.js" defer></script>
-    <script src="../js/services/FarmService.js" defer></script>
-    <script src="../js/services/ReservationService.js" defer></script>
-    <script src="../js/controllers/AppController.js" defer></script>
+    <script src="js/models/FarmModel.js" defer></script>
+    <script src="js/models/ReservationModel.js" defer></script>
+    <script src="js/services/FarmService.js" defer></script>
+    <script src="js/services/ReservationService.js" defer></script>
+    <script src="js/controllers/AppController.js" defer></script>
 
-    <script src="../js/homePage.js" defer></script>
+    <script src="js/homePage.js" defer></script>
 </head>
 <body>
     
@@ -39,15 +39,15 @@
             <ul>
                 <li><a href="#hero">Home</a></li>
                 <li><a href="#about">About</a></li>
-                <li><a href="/pages/farm-list.html">Farms</a></li>
+                <li><a href="pages/farm-list.html">Farms</a></li>
                 <li><a href="#map-section">Map</a></li>
-                <li><a href="/pages/reservation.html">Reservation</a></li>
+                <li><a href="pages/reservation.html">Reservation</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
 
         <search>
-            <form action="/pages/farm-list.html" method="get" role="search">
+            <form action="pages/farm-list.html" method="get" role="search">
                 <label for="site-search">Search farms</label>
                 <input type="search" id="site-search" name="q" placeholder="Fruit, farm name, or province">
                 <button type="submit">Search</button>
