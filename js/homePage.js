@@ -64,7 +64,7 @@ function renderPopularFarms(farms) {
 
         popularGrid.innerHTML += `
             <article class="farm-card">
-                <a href="farm.html?id=${farm.id}">
+                <a href="pages/farm.html?id=${farm.id}">
                     <img src="${imageSrc}" alt="${farm.name}" onerror="this.src='images/default-farm.jpg'">
                     <div class="card-info">
                         <h3>${farm.name}</h3>
@@ -111,7 +111,7 @@ function renderHeroCarousel(farms) {
                     <p class="summary-text">${newsSummary}</p>
                     <div class="news-footer">
                         <span class="farm-source">Source: <strong>${farm.name}</strong></span>
-                        <a href="farm.html?id=${farm.id}" class="btn btn-sm btn-primary">Read Story & Book Visit &rarr;</a>
+                        <a href="pages/farm.html?id=${farm.id}" class="btn btn-sm btn-primary">Read Story & Book Visit &rarr;</a>
                     </div>
                 </div>
             </article>
@@ -192,7 +192,7 @@ function renderMapPins(farms) {
                     <h4>${farm.name}</h4>
                     <p><strong>Location:</strong> ${farm.location || farm.province}<br>
                     <strong>Crops:</strong> ${cropsList}</p>
-                    <a href="farm.html?id=${farm.id}" class="btn-popup">View Farm & Book</a>
+                    <a href="pages/farm.html?id=${farm.id}" class="btn-popup">View Farm & Book</a>
                 </div>
             `;
 

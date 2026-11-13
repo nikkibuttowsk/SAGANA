@@ -5,16 +5,16 @@
     var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var timer = null;
 
-    // same gap the CSS uses (html { scroll-padding-top }), so the section sits just under the header
-    function offset() {
-        var v = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop);
-        if (!isNaN(v)) return v;
+    // same gap the CSS uses (scroll-margin-top on the section), so it sits just under the header
+    function offset(el) {
+        var v = el ? parseFloat(getComputedStyle(el).scrollMarginTop) : NaN;
+        if (!isNaN(v) && v > 0) return v;
         var header = document.getElementById('site-header');
         return (header ? header.offsetHeight : 0) + 12;
     }
     function maxScroll() { return document.documentElement.scrollHeight - window.innerHeight; }
     function targetY(el) {
-        return Math.max(0, Math.min(maxScroll(), el.getBoundingClientRect().top + window.scrollY - offset()));
+        return Math.max(0, Math.min(maxScroll(), el.getBoundingClientRect().top + window.scrollY - offset(el)));
     }
 
     // wait until the scrolling has stopped, then fix any shortfall (up to 4 times)

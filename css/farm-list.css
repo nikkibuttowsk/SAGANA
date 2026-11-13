@@ -1,11 +1,7 @@
 
 .bg-light { background: var(--white); }
 
-/* ---------- Header bits specific to this page ---------- */
-#site-header nav a.active {
-    color: var(--color-secondary);
-    border-color: var(--color-secondary);
-}
+/* ---------- Old-style search box (only if the header still uses .search-form) ---------- */
 #site-header .search-form {
     width: 220px;           /* same as the home page search */
     display: flex;
@@ -50,6 +46,7 @@
 /* ---------- Sections ---------- */
 .farm-group-section { padding: 3rem 1.5rem; }
 
+/* the "Popular Right Now" block sits on a light green band, like the mockup */
 .farm-group-section:has(#popular-farms-grid) { background: var(--surface); }
 
 .farm-group-section .section-header {
@@ -185,4 +182,12 @@
     #wet-season-grid .farm-card,
     #dry-season-grid .farm-card { flex-basis: 78%; }
     #site-header .search-form { display: none; }
+}
+
+/* "11.1 km away" under a farm in the Near You row */
+.card-info .distance {
+    margin: 0.45rem 0 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--color-secondary);
 }
