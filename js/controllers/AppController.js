@@ -18,6 +18,6 @@ class AppController {
 
     static async registerNewFarm(formData) {
         const farm = new FarmModel(formData);
-        return await FarmService.registerFarm(farm);
+        return await FarmService.registerFarm(farm, formData.website);
     }
 }

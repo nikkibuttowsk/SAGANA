@@ -2,6 +2,7 @@ const IN_PAGES_FOLDER = location.pathname.includes("/pages/");
 const ASSET_ROOT = IN_PAGES_FOLDER ? "../" : "";  
 const PAGES_ROOT = IN_PAGES_FOLDER ? "" : "pages/"; 
 const DEFAULT_IMAGE = `${ASSET_ROOT}images/default-farm.jpg`;
+const API_URL = `${ASSET_ROOT}api.php`;
 const $ = (selector, root = document) => root.querySelector(selector);
 const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const getParam = (name) => new URLSearchParams(location.search).get(name);

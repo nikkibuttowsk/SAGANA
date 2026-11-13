@@ -1,4 +1,4 @@
-let selectedFarm = null;   
+let selectedFarm = null;
 let selectedSlot = "";
 
 const idempotencyKey = ReservationModel.newKey();

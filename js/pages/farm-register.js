@@ -21,6 +21,7 @@ async function handleFarmRegistration(e) {
     try {
         await AppController.registerNewFarm({
             name: get("reg-farm-name"),
+            website: form.elements.website?.value || "",
             province: get("reg-province"),
             location: get("reg-location"),
             admin_email: get("reg-admin-email"),
@@ -38,7 +39,7 @@ async function handleFarmRegistration(e) {
         form.replaceChildren(
             h("section", { role: "status" },
                 h("h2", { text: "Thank you!" }),
-                h("p", { text: "Your farm listing was submitted." }),
+                h("p", { text: "Your farm submission is pending admin review." }),
                 h("p", {}, h("a", { class: "btn btn-primary", href: "farm-list.html", text: "Browse farms" }))));
     } catch (err) {
         console.error("Farm registration error:", err);
