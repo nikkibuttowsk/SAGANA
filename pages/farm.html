@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm - SAGANA</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabaseClient.js"></script>
+    <script src="../js/farm.js"></script>
+    <script src="../js/farmModal.js" defer></script>
+</head>
+<body class="farm-page">
+    <a href="#main-content">Skip to main content</a>
+
+    <header id="site-header">
+        <a href="homePage.html" aria-label="SAGANA: Farm PH Home">
+            <img src="../images/sagana-logo.jpg" alt="SAGANA: Farm PH Logo" id="logo">
+            <span>SAGANA</span>
+        </a>
+
+        <nav aria-label="Main navigation">
+            <ul>
+                <li><a href="homePage.html">Home</a></li>
+                <li><a href="homePage.html#about">About</a></li>
+                <li><a href="farm-list.html" class="active" aria-current="page">Farms</a></li>
+                <li><a href="homePage.html#map-section">Map</a></li>
+                <li><a href="reservation.html">Reservation</a></li>
+                <li><a href="homePage.html#contact">Contact Us</a></li>
+            </ul>
+        </nav>
+
+        <search>
+            <form action="farm-list.html" method="get" role="search">
+                <label for="site-search">Search farms</label>
+                <input type="search" id="site-search" name="q" placeholder="Fruit, farm name, or province">
+                <button type="submit">Search</button>
+            </form>
+        </search>
+    </header>
+
+    <!-- Shown only when NO farm is selected -->
+    <section class="no-farm">
+        <h1>Choose a farm</h1>
+        <p>Pick a farm from the list to see its photos, hours and how to book a visit.</p>
+        <a href="farm-list.html" class="btn btn-primary">Browse All Farms &rarr;</a>
+    </section>
+
+    <!-- The pop-up: shown only when a farm is selected (see farmModal.js) -->
+    <main id="main-content" class="farm-page-container" role="dialog" aria-modal="true" aria-labelledby="farm-title">
+        <button type="button" class="farm-close" id="farm-close" aria-label="Close">&#10005;</button>
+
+        <div class="farm-primary-content">
+            <section class="media-carousel-container">
+                <div class="carousel-wrapper"></div>
+                <span class="slide-counter" id="slide-counter" hidden>1 / 3</span>
+                <div class="carousel-dots" id="carousel-dots" aria-hidden="true" hidden></div>
+                <!-- photo / video arrows (inside the picture) -->
+                <button type="button" class="media-arrow prev" id="media-prev" aria-label="Previous photo"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+                <button type="button" class="media-arrow next" id="media-next" aria-label="Next photo"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </section>
+        </div>
+
+        <aside class="farm-info-sidebar">
+            <div class="sidebar-card">
+                <span class="farm-type" id="farm-type" hidden></span>
+                <h1 id="farm-title"></h1>
+                <p class="rating" id="farm-rating" hidden><span class="star">&#9733;</span> <strong id="farm-rating-value"></strong><span id="farm-review-count"></span></p>
+                <p class="location-sub" id="farm-location-sub"></p>
+                <hr>
+
+                <h3>About the Farm</h3>
+                <p id="farm-description"></p>
+
+                <dl class="info-list">
+                    <dt>Opening Hours</dt>
+                    <dd id="farm-hours"></dd>
+
+                    <dt data-row="phone">Phone</dt>
+                    <dd data-row="phone"><a href="#" id="farm-phone"></a></dd>
+
+                    <dt>Location</dt>
+                    <dd><span id="farm-place"></span> &nbsp;<a href="#" id="farm-directions" target="_blank" rel="noopener noreferrer">Get directions</a></dd>
+
+                    <dt>Main Crops</dt>
+                    <dd id="farm-crops"></dd>
+
+                    <dt>Bearing Season</dt>
+                    <dd id="farm-season"></dd>
+                </dl>
+
+                <section class="farm-section" id="season-section" hidden>
+                    <h2>Harvest season</h2>
+                    <ul class="season-chips" id="season-chips">
+                        <li>Jan</li><li>Feb</li><li>Mar</li><li>Apr</li><li>May</li><li>Jun</li>
+                        <li>Jul</li><li>Aug</li><li>Sep</li><li>Oct</li><li>Nov</li><li>Dec</li>
+                    </ul>
+                </section>
+
+                <section class="farm-section" id="activities-section" hidden>
+                    <h2>Farm Activities</h2>
+                    <ul class="activity-tags" id="activity-list"></ul>
+                </section>
+
+                <section class="farm-section chat-section">
+                    <h2>Ask a Question</h2>
+                    <div id="chat-log" class="chat-log" role="log" aria-live="polite">
+                        <div class="msg bot-msg">Hello! How can I help you regarding your visit today?</div>
+                    </div>
+                    <form id="chat-form" class="chat-input-form">
+                        <input type="text" id="chat-input" placeholder="Ask about entrance fees, fruits, or timing..." required>
+                        <button type="submit" class="btn btn-primary btn-sm">Send</button>
+                    </form>
+                </section>
+            </div>
+
+            <!-- stays visible at the bottom while the details scroll -->
+            <div class="farm-cta-bar">
+                <p class="price"><span id="farm-price" class="amount"></span> <span id="farm-price-unit">/ person</span></p>
+                <a href="reservation.html" class="btn btn-primary" id="book-btn">Book now</a>
+            </div>
+        </aside>
+
+        <!-- previous / next FARM (outside the pop-up) -->
+        <button type="button" class="farm-nav prev" id="farm-prev" aria-label="Previous farm" hidden><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button type="button" class="farm-nav next" id="farm-next" aria-label="Next farm" hidden><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    </main>
+</body>
+</html>

@@ -1,0 +1,31 @@
+
+#about {
+    background: var(--surface);
+    text-align: center;
+}
+#about > p { color: var(--muted); max-width: 60ch; }
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+.team-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem 1rem;
+    box-shadow: var(--shadow-sm);
+}
+.team-card img {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 0.8rem;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--color-tertiary);
+    border: 3px solid var(--color-tertiary);
+}
+.team-card h4 { margin-bottom: 0.1rem; }
+.team-card p { color: var(--muted); font-size: 0.85rem; margin: 0; }

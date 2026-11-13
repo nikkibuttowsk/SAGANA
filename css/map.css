@@ -1,0 +1,20 @@
+
+.map-header { text-align: center; margin-bottom: 1.5rem; }
+.map-header p { color: var(--muted); }
+
+#leaflet-map {
+    height: 460px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* ---------- Leaflet popup polish ---------- */
+.leaflet-popup-content-wrapper { border-radius: var(--radius-sm); }
+.leaflet-popup-content { font-family: inherit; color: var(--text); }
+
+@media (max-width: 600px) {
+    #leaflet-map { height: 340px; }
+}

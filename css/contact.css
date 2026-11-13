@@ -1,0 +1,92 @@
+.contact-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 2.5rem;
+    align-items: start;
+}
+.contact-info > p { color: var(--muted); }
+.contact-methods { margin: 1.25rem 0; }
+.contact-methods p { margin: 0.3rem 0; font-size: 0.92rem; }
+
+.simple-form { display: grid; gap: 1rem; }
+.form-group { display: grid; gap: 0.3rem; }
+.form-group label { font-size: 0.85rem; font-weight: 600; color: var(--color-primary); }
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    font: inherit;
+    color: var(--text);
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 0.7rem 0.9rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-group textarea { resize: vertical; }
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 3px rgba(46, 107, 61, 0.2);
+}
+.simple-form .btn { justify-self: start; }
+
+/* Owner CTA card */
+.owner-cta-card {
+    background: var(--color-primary);
+    color: var(--white);
+    border-radius: var(--radius);
+    padding: 2rem;
+    box-shadow: var(--shadow-md);
+}
+.owner-cta-card h2 { color: var(--white); }
+.owner-cta-card p { color: var(--color-tertiary); }
+.cta-badge {
+    display: inline-block;
+    background: var(--color-tertiary);
+    color: var(--color-primary);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 0.3rem 0.8rem;
+    border-radius: var(--radius-pill);
+    margin-bottom: 1rem;
+}
+.benefit-list { margin: 1.25rem 0 1.75rem; display: grid; gap: 0.6rem; font-size: 0.92rem; }
+
+@media (max-width: 900px) {
+    .contact-grid { grid-template-columns: 1fr; }
+}
+
+#about {
+    background: var(--surface);
+    text-align: center;
+}
+#about > p { color: var(--muted); max-width: 60ch; }
+
+.team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+.team-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem 1rem;
+    box-shadow: var(--shadow-sm);
+}
+.team-card img {
+    width: 96px;
+    height: 96px;
+    margin: 0 auto 0.8rem;
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--color-tertiary);
+    border: 3px solid var(--color-tertiary);
+}
+.team-card h4 { margin-bottom: 0.1rem; }
+.team-card p { color: var(--muted); font-size: 0.85rem; margin: 0; }
+
+#contact { min-height: calc(100vh - var(--header-h) - 11rem); }

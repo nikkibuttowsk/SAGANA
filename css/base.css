@@ -1,0 +1,113 @@
+/* ==========================================================================
+   SAGANA: Fruit Farms PH — style.css
+   Clean, green, card-based layout
+   ========================================================================== */
+
+:root {
+    --color-primary: #14261b;
+    --color-secondary: #2e6b3d;
+    --color-tertiary: #dcecd6;
+    --text: #2b2f2c;
+    --muted: #6b726d;
+    --white: #fff;
+
+    /* extras (kept minimal) */
+    --surface: #f6faf4;
+    --border: #e3e9e1;
+    --shadow-sm: 0 2px 8px rgba(20, 38, 27, 0.06);
+    --shadow-md: 0 10px 30px rgba(20, 38, 27, 0.12);
+    --radius-sm: 10px;
+    --radius: 16px;
+    --radius-pill: 999px;
+    --max-width: 1180px;
+    --header-h: 64px;
+
+    /* swap in your own hero photo: --hero-image: url("../images/hero.jpg"); */
+    --hero-image: url("../images/hero.jpg");
+    /* shown inside the news card whenever a story has no (or a broken) image */
+    --news-fallback: url("../images/default-farm.jpg");
+}
+
+/* ---------- Reset / base ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + 12px); }
+
+body {
+    margin: 0;
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+img { max-width: 100%; display: block; }
+a { color: var(--color-secondary); text-decoration: none; }
+a:hover { text-decoration: underline; }
+ul { list-style: none; margin: 0; padding: 0; }
+h1, h2, h3, h4 { color: var(--color-primary); line-height: 1.2; margin: 0 0 0.5rem; }
+h2 { font-size: clamp(1.4rem, 2.5vw, 1.9rem); }
+p { margin: 0 0 1rem; }
+.mt-2 { margin-top: 2rem; }
+
+:focus-visible {
+    outline: 3px solid var(--color-secondary);
+    outline-offset: 2px;
+}
+
+section {
+    padding: 4rem 1.5rem;
+}
+section > * { max-width: var(--max-width); margin-left: auto; margin-right: auto; }
+
+/* Skip link */
+body > a[href="#main-content"] {
+    position: absolute;
+    left: 1rem;
+    top: -60px;
+    background: var(--color-primary);
+    color: var(--white);
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-sm);
+    z-index: 1000;
+    transition: top 0.2s;
+}
+body > a[href="#main-content"]:focus { top: 1rem; text-decoration: none; }
+
+/* ---------- Buttons ---------- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.7rem 1.4rem;
+    border: 2px solid transparent;
+    border-radius: var(--radius-pill);
+    font: inherit;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+}
+.btn:hover { text-decoration: none; transform: translateY(-1px); box-shadow: var(--shadow-sm); }
+.btn-primary { background: var(--color-secondary); color: var(--white); }
+.btn-primary:hover { background: var(--color-primary); }
+.btn-secondary { background: var(--color-tertiary); color: var(--color-primary); }
+.btn-secondary:hover { background: var(--white); }
+.btn-outline { background: transparent; border-color: var(--color-secondary); color: var(--color-secondary); }
+.btn-outline:hover { background: var(--color-secondary); color: var(--white); }
+.btn-sm { padding: 0.45rem 1rem; font-size: 0.85rem; }
+.btn-lg { padding: 0.9rem 1.8rem; font-size: 1.05rem; }
+.full-width { width: 100%; }
+
+
+@media (max-width: 900px) {
+    html { scroll-padding-top: 120px; }
+}
+@media (max-width: 600px) {
+    section { padding: 2.5rem 1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; scroll-behavior: auto !important; }
+}

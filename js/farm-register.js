@@ -3,10 +3,42 @@ document.addEventListener("DOMContentLoaded", () => {
     if (regForm) {
         regForm.addEventListener("submit", handleFarmRegistration);
     }
+
+    const anotherBtn = document.getElementById("register-another");
+    if (anotherBtn) {
+        anotherBtn.addEventListener("click", showForm);
+    }
 });
+
+function showError(message) {
+    const box = document.getElementById("form-error");
+    box.textContent = message;
+    box.hidden = !message;
+}
+
+function showSubmittedBanner(farmName, email) {
+    document.getElementById("submitted-farm-name").textContent = farmName;
+    document.getElementById("submitted-email").textContent = email;
+
+    document.getElementById("farm-registration-form").hidden = true;
+
+    const banner = document.getElementById("submission-banner");
+    banner.hidden = false;
+    banner.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function showForm() {
+    const form = document.getElementById("farm-registration-form");
+    form.reset();
+    form.hidden = false;
+    document.getElementById("submission-banner").hidden = true;
+    showError("");
+    document.getElementById("reg-farm-name").focus();
+}
 
 async function handleFarmRegistration(e) {
     e.preventDefault();
+    showError("");
 
     const name = document.getElementById("reg-farm-name").value.trim();
     const province = document.getElementById("reg-province").value.trim();
@@ -25,16 +57,21 @@ async function handleFarmRegistration(e) {
 
     const lat = parseFloat(document.getElementById("reg-lat").value || "0");
     const lng = parseFloat(document.getElementById("reg-lng").value || "0");
-    const imageUrl = document.getElementById("reg-image-url").value.trim() || 'images/default-farm.jpg';
+    const imageUrl = document.getElementById("reg-image-url").value.trim() || "images/default-farm.jpg";
 
     if (!name || !province || !location || !adminEmail || cropsArray.length === 0) {
-        alert("Please fill out all required fields.");
+        showError("Please fill out all required fields.");
         return;
     }
 
+    const submitBtn = document.getElementById("submit-btn");
+    const originalLabel = submitBtn.textContent;
+    submitBtn.disabled = true;
+    submitBtn.textContent = "Submitting...";
+
     // Insert payload into Supabase PostgreSQL 'farms' table
-    const { data, error } = await supabase
-        .from('farms')
+    const { error } = await supabase
+        .from("farms")
         .insert([
             {
                 name: name,
@@ -44,23 +81,25 @@ async function handleFarmRegistration(e) {
                 entrance_fee: entranceFee,
                 crops: cropsArray,
                 season: season,
-                category: 'popular', // Default new listings to popular/featured
-                bearing_season: bearingSeason || 'All Season',
-                hours: hours || '8:00 AM - 5:00 PM',
-                description: description || 'Welcome to our fruit farm experience!',
+                category: "popular",
+                bearing_season: bearingSeason || "All Season",
+                hours: hours || "8:00 AM - 5:00 PM",
+                description: description || "Welcome to our fruit farm experience!",
                 latitude: lat || null,
                 longitude: lng || null,
                 images: [imageUrl]
+                // status: "pending"   // <- uncomment once your 'farms' table has a 'status' column
             }
-        ])
-        .select();
+        ]);
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalLabel;
 
     if (error) {
         console.error("Supabase Farm Registration Error:", error);
-        alert("Failed to register farm: " + error.message);
+        showError("Failed to register farm: " + error.message);
         return;
     }
 
-    alert(`🎉 Success! "${name}" has been registered on SAGANA. Redirecting to farm catalog...`);
-    window.location.href = "farm-list.html";
+    showSubmittedBanner(name, adminEmail);
 }

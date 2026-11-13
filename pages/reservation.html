@@ -4,33 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reservation - Plan your farm day</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    
-    <!-- Third Party Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <script src="js/supabaseClient.js"></script>
-    <script src="js/reservation.js" defer></script>
+
+    <!-- Third party libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr@4.6.13/dist/flatpickr.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
+
+    <!-- Supabase connection -->
+    <script src="../js/supabaseClient.js" defer></script>
+    <script src="../js/utils.js" defer></script>
+
+    <!-- Backend scripts -->
+    <script src="../js/models/FarmModel.js" defer></script>
+    <script src="../js/models/ReservationModel.js" defer></script>
+    <script src="../js/services/FarmService.js" defer></script>
+    <script src="../js/services/ReservationService.js" defer></script>
+    <script src="../js/controllers/AppController.js" defer></script>
+
+    <script src="../js/reservation.js" defer></script>
 </head>
 <body class="bg-light">
     <header id="site-header">
-        <a href="homePage.html" class="logo-link">
-            <img src="images/logo.png" alt="SAGANA Logo" id="logo">
-            <span>Fruit Farms PH</span>
-        </a>
-        <nav aria-label="Main navigation">
-            <ul>
-                <li><a href="homePage.html#hero">Home</a></li>
-                <li><a href="homePage.html#about">About</a></li>
-                <li><a href="farm-list.html">Farms</a></li>
-                <li><a href="homePage.html#map-section">Map</a></li>
-                <li><a href="reservation.html" class="active">Reservation</a></li>
-                <li><a href="homePage.html#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
+    <a href="homePage.html" aria-label="SAGANA: Farm PH Home">
+        <img src="../images/sagana-logo.jpg" alt="SAGANA: Farm PH Logo" id="logo">
+        <span>SAGANA</span>
+    </a>
+
+    <nav aria-label="Main navigation">
+        <ul>
+            <li><a href="homePage.html">Home</a></li>
+            <li><a href="homePage.html#about">About</a></li>
+            <li><a href="farm-list.html">Farms</a></li>
+            <li><a href="homePage.html#map-section">Map</a></li>
+            <li><a href="reservation.html" class="active" aria-current="page">Reservation</a></li>
+            <li><a href="homePage.html#contact">Contact Us</a></li>
+        </ul>
+    </nav>
+
+    <search>
+        <form action="farm-list.html" method="get" role="search">
+            <label for="site-search">Search farms</label>
+            <input type="search" id="site-search" name="q" placeholder="Fruit, farm name, or province">
+            <button type="submit">Search</button>
+        </form>
+    </search>
+</header>
 
     <main id="main-content" class="reservation-wrapper">
         <header class="res-header">

@@ -4,26 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register Your Farm - SAGANA</title>
-    <link rel="stylesheet" href="css/style.css">
-    
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/farm-register.css">
+
     <!-- Supabase CDN & Client Config -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/supabaseClient.js"></script>
-    <script src="js/farm-register.js" defer></script>
+    <script src="../js/supabaseClient.js"></script>
+    <script src="../js/farm-register.js" defer></script>
 </head>
 <body class="bg-light">
     <header id="site-header">
-        <a href="homePage.html" class="logo-link">
-            <img src="images/logo.png" alt="SAGANA Logo" id="logo">
-            <span>Fruit Farms PH</span>
+        <a href="homePage.html" aria-label="SAGANA: Farm PH Home">
+            <img src="../images/sagana-logo.jpg" alt="SAGANA: Farm PH Logo" id="logo">
+            <span>SAGANA</span>
         </a>
+
         <nav aria-label="Main navigation">
             <ul>
                 <li><a href="homePage.html">Home</a></li>
+                <li><a href="homePage.html#about">About</a></li>
                 <li><a href="farm-list.html">Farms</a></li>
+                <li><a href="farm-list.html">Map View</a></li>
                 <li><a href="reservation.html">Reservation</a></li>
+                <li><a href="#contact"class="active" aria-current="page">Contact Us</a></li>
             </ul>
         </nav>
+
+        <search>
+            <form action="farm.html" method="get" role="search">
+                <label for="site-search">Search farms</label>
+                <input type="search" id="site-search" name="q" placeholder="Fruit, farm name, or province">
+                <button type="submit">Search</button>
+            </form>
+        </search>
     </header>
 
     <main id="main-content" class="registration-container">
@@ -32,12 +45,33 @@
             <p>Fill out the details below to feature your agritourism destination on our platform.</p>
         </header>
 
+        <!-- Shown after a successful submission -->
+        <section id="submission-banner" class="submission-banner" role="status" aria-live="polite" hidden>
+            <span class="banner-icon" aria-hidden="true">✓</span>
+            <div class="banner-body">
+                <h2>Your farm listing has been submitted</h2>
+                <p>
+                    <strong id="submitted-farm-name">Your farm</strong> is now being processed by our admin team.
+                    We'll review the details and email you at <strong id="submitted-email">your admin email</strong>
+                    once it's approved.
+                </p>
+                <p class="banner-status"><span class="status-dot"></span> Status: Pending admin review</p>
+                <div class="banner-actions">
+                    <a href="farm-list.html" class="banner-link primary">Browse farms</a>
+                    <button type="button" id="register-another" class="banner-link">Register another farm</button>
+                </div>
+            </div>
+        </section>
+
         <form id="farm-registration-form" class="registration-card">
-            
-            <!-- Fieldset 1: General Farm Details -->
+
+            <!-- Section 1: General Farm Details -->
             <fieldset class="form-fieldset">
-                <legend class="form-legend">Farm & Owner Details</legend>
-                
+                <legend class="form-legend">
+                    <span>Farm &amp; Owner Details</span>
+                    <span class="legend-note">* Required fields</span>
+                </legend>
+
                 <div class="form-grid">
                     <p class="form-field">
                         <label for="reg-farm-name">Farm Name *</label>
@@ -47,7 +81,7 @@
                         <label for="reg-province">Province / Region *</label>
                         <input type="text" id="reg-province" name="province" required placeholder="e.g. Batangas">
                     </p>
-                    <p class="form-field full-width">
+                    <p class="form-field">
                         <label for="reg-location">Complete Address (Barangay, City) *</label>
                         <input type="text" id="reg-location" name="location" required placeholder="e.g. Brgy. Sambat, Tanauan City, Batangas">
                     </p>
@@ -62,10 +96,10 @@
                 </div>
             </fieldset>
 
-            <!-- Fieldset 2: Harvest & Operations -->
+            <!-- Section 2: Harvest & Operations -->
             <fieldset class="form-fieldset">
-                <legend class="form-legend">Harvest & Operations</legend>
-                
+                <legend class="form-legend"><span>Harvest &amp; Operations</span></legend>
+
                 <div class="form-grid">
                     <p class="form-field">
                         <label for="reg-crops">Crops Grown (comma-separated) *</label>
@@ -88,16 +122,16 @@
                         <input type="text" id="reg-hours" name="hours" placeholder="e.g. Mon - Sun: 8:00 AM - 5:00 PM">
                     </p>
                     <p class="form-field full-width">
-                        <label for="reg-description">Farm Description & Activities</label>
+                        <label for="reg-description">Farm Description &amp; Activities</label>
                         <textarea id="reg-description" name="description" rows="4" placeholder="Tell visitors what makes your farm special (e.g. fruit picking tours, organic products)..."></textarea>
                     </p>
                 </div>
             </fieldset>
 
-            <!-- Fieldset 3: Location Pins & Media -->
+            <!-- Section 3: Map Location & Media -->
             <fieldset class="form-fieldset">
-                <legend class="form-legend">Map Location & Media</legend>
-                
+                <legend class="form-legend"><span>Map Location &amp; Media</span></legend>
+
                 <div class="form-grid">
                     <p class="form-field">
                         <label for="reg-lat">Latitude (for Leaflet Map Pin)</label>
@@ -107,15 +141,17 @@
                         <label for="reg-lng">Longitude (for Leaflet Map Pin)</label>
                         <input type="number" step="any" id="reg-lng" name="longitude" placeholder="e.g. 121.0583">
                     </p>
-                    <p class="form-field full-width">
+                    <p class="form-field">
                         <label for="reg-image-url">Main Cover Photo (URL)</label>
                         <input type="url" id="reg-image-url" name="image_url" placeholder="https://example.com/farm-photo.jpg">
                     </p>
                 </div>
             </fieldset>
 
-            <div class="form-actions mt-2">
-                <button type="submit" class="btn btn-primary btn-lg full-width">Submit Farm Listing</button>
+            <p id="form-error" class="form-error" role="alert" hidden></p>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary" id="submit-btn">Submit Farm Listing</button>
             </div>
         </form>
     </main>

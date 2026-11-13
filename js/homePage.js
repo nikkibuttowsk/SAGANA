@@ -13,11 +13,13 @@ async function fetchHomePageData() {
 
         if (error) {
             console.error("Error fetching farms for homepage:", error.message);
+            renderCarouselFallback();
             return;
         }
 
         if (!farms || farms.length === 0) {
             console.warn("No farms returned from database.");
+            renderCarouselFallback();
             return;
         }
 
@@ -32,7 +34,16 @@ async function fetchHomePageData() {
 
     } catch (err) {
         console.error("Unexpected homepage error:", err);
+        renderCarouselFallback();
     }
+}
+
+// No farms (or the request failed): leave the carousel empty. Its space and the arrows
+// disappear (see carousel.css); the "Suggested for you" heading stays.
+function renderCarouselFallback() {
+    const track = document.getElementById("news-carousel-track");
+    if (track) track.innerHTML = "";
+    document.querySelector("#hero-carousel .carousel-nav-buttons")?.setAttribute("hidden", "");
 }
 
 
@@ -77,6 +88,11 @@ function renderHeroCarousel(farms) {
     const trendingNews = farms.filter(f => f.is_trending || f.headline);
     const displayItems = trendingNews.length > 0 ? trendingNews : farms.slice(0, 3);
 
+    if (displayItems.length === 0) {
+        renderCarouselFallback();
+        return;
+    }
+
     displayItems.forEach((farm, index) => {
         const activeClass = index === 0 ? "active" : "";
         const imageSrc = (farm.images && farm.images.length > 0) ? farm.images[0] : 'images/default-farm.jpg';
@@ -87,7 +103,7 @@ function renderHeroCarousel(farms) {
         track.innerHTML += `
             <article class="slide news-slide ${activeClass}">
                 <div class="slide-media">
-                    <img src="${imageSrc}" alt="${farm.name}">
+                    <img src="${imageSrc}" alt="${farm.name}" onerror="this.style.display='none'">
                 </div>
                 <div class="slide-caption news-caption">
                     <span class="news-tag">BREAKING NEWS &bull; ${pubDate}</span>
@@ -102,27 +118,52 @@ function renderHeroCarousel(farms) {
         `;
     });
 
+    // There are real slides, so make sure the arrows/dots pill is visible
+    document.querySelector("#hero-carousel .carousel-nav-buttons")?.removeAttribute("hidden");
+
     // Carousel Navigation Logic
     const slides = track.querySelectorAll(".slide");
+    const prevBtn = document.getElementById("hero-prev");
+    const nextBtn = document.getElementById("hero-next");
     let currentSlide = 0;
 
+    // Position dots, placed between the arrows (styled in carousel.css)
+    const oldDots = document.querySelector("#hero-carousel .carousel-dots");
+    if (oldDots) oldDots.remove();
+    const dotsWrap = document.createElement("div");
+    dotsWrap.className = "carousel-dots";
+    slides.forEach((_, i) => {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "carousel-dot";
+        dot.setAttribute("aria-label", `Go to suggestion ${i + 1} of ${slides.length}`);
+        dot.addEventListener("click", () => showSlide(i));
+        dotsWrap.appendChild(dot);
+    });
+    dotsWrap.style.display = slides.length > 1 ? "" : "none";
+    if (prevBtn) prevBtn.insertAdjacentElement("afterend", dotsWrap);
+
     function showSlide(index) {
+        currentSlide = index;
         slides.forEach((slide, i) => {
             slide.classList.toggle("active", i === index);
         });
+        dotsWrap.querySelectorAll(".carousel-dot").forEach((dot, i) => {
+            dot.classList.toggle("is-active", i === index);
+        });
     }
 
-    document.getElementById("hero-next")?.addEventListener("click", () => {
+    nextBtn?.addEventListener("click", () => {
         if (slides.length === 0) return;
-        currentSlide = (currentSlide + 1) % slides.length;
-        showSlide(currentSlide);
+        showSlide((currentSlide + 1) % slides.length);
     });
 
-    document.getElementById("hero-prev")?.addEventListener("click", () => {
+    prevBtn?.addEventListener("click", () => {
         if (slides.length === 0) return;
-        currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-        showSlide(currentSlide);
+        showSlide((currentSlide - 1 + slides.length) % slides.length);
     });
+
+    showSlide(0);
 }
 
 // Dynamic Leaflet Map Pins

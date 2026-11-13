@@ -1,14 +1,24 @@
 document.addEventListener("DOMContentLoaded", () => {
-    fetchFarmsFromSupabase();
-
     // Attach search event listener
     const searchInput = document.getElementById("farm-search-input");
     if (searchInput) {
+        // Pre-fill from a link like farm-list.html?q=mango (e.g. a search sent from another page)
+        const urlQuery = new URLSearchParams(window.location.search).get("q");
+        if (urlQuery) searchInput.value = urlQuery;
+
         searchInput.addEventListener("input", (e) => {
             const query = e.target.value.toLowerCase().trim();
             filterFarmsUI(query);
         });
+
+        // Pressing Enter / the Search button just filters; no page reload
+        searchInput.closest("form")?.addEventListener("submit", (e) => {
+            e.preventDefault();
+            filterFarmsUI(searchInput.value.toLowerCase().trim());
+        });
     }
+
+    fetchFarmsFromSupabase();
 });
 
 let allFarmsData = []; // Store fetched farms locally for live searching
@@ -27,7 +37,10 @@ async function fetchFarmsFromSupabase() {
 
         console.log("Fetched farms from database:", farms); // Useful for debugging in console
         allFarmsData = farms || [];
-        renderFarmsGrid(allFarmsData);
+
+        // If the search box already has text (e.g. from ?q=), start filtered
+        const startQuery = (document.getElementById("farm-search-input")?.value || "").toLowerCase().trim();
+        filterFarmsUI(startQuery);
     } catch (err) {
         console.error("Unexpected error:", err);
     }
@@ -45,10 +58,9 @@ function renderFarmsGrid(farms) {
     if (dryGrid) dryGrid.innerHTML = "";
     if (nearbyGrid) nearbyGrid.innerHTML = "";
 
-    if (!farms || farms.length === 0) {
-        if (popularGrid) popularGrid.innerHTML = "<p>No farms found.</p>";
-        return;
-    }
+    // Nothing to show: leave every row empty. The CSS (farm-list.css) shows the
+    // "No farms found." box in each empty row, so no message is written here.
+    if (!farms || farms.length === 0) return;
 
     farms.forEach(farm => {
         const cardHTML = createFarmCardHTML(farm);
@@ -100,47 +112,37 @@ function createFarmCardHTML(farm) {
     } else if (typeof farm.crops === 'string') {
         cropsList = farm.crops;
     } else {
-        cropsList = 'Fresh Produce';
+        fillGrid("nearby-farms-grid", [], false, "Press \"Use My Location\" to see the farms closest to you.");
     }
 
-    const farmName = farm.name || 'Unnamed Farm';
-    const farmLocation = farm.location || farm.province || 'Philippines';
-    const farmId = farm.id || '';
+    const flagged = farms.filter((f) => f.category === "popular");
+    fillGrid("popular-farms-grid", flagged.length || searching ? flagged : farms.slice(0, 3));
 
-    return `
-        <article class="farm-card" data-name="${farmName.toLowerCase()}" data-province="${farmLocation.toLowerCase()}" data-crops="${cropsList.toLowerCase()}">
-            <a href="farm.html?id=${farmId}">
-                <img src="${imageSrc}" alt="${farmName}" onerror="this.src='images/default-farm.jpg'">
-                <div class="card-info">
-                    <h3>${farmName}</h3>
-                    <p class="location">${farmLocation}</p>
-                    <span class="tag">${cropsList}</span>
-                </div>
-            </a>
-        </article>
-    `;
+    fillGrid("wet-season-grid", farms.filter((f) => ["wet", "all"].includes(f.season)));
+    fillGrid("dry-season-grid", farms.filter((f) => ["dry", "all"].includes(f.season)));
 }
 
-// Search bar filter helper
-function filterFarmsUI(query) {
-    if (!query) {
-        renderFarmsGrid(allFarmsData);
+function filterFarms(query) {
+    const q = query.toLowerCase().trim();
+    if (!q) return allFarms;
+    return allFarms.filter((f) =>
+        [f.name, f.province, f.location, f.crops.join(" ")].join(" ").toLowerCase().includes(q)
+    );
+}
+
+function locateUser() {
+    const status = $("#location-status");
+    if (!navigator.geolocation) {
+        status.textContent = "Your browser doesn't support location.";
         return;
     }
-
-    const filtered = allFarmsData.filter(farm => {
-        const nameMatch = (farm.name || '').toLowerCase().includes(query);
-        const provinceMatch = (farm.province || farm.location || '').toLowerCase().includes(query);
-        
-        let cropsMatch = false;
-        if (Array.isArray(farm.crops)) {
-            cropsMatch = farm.crops.join(" ").toLowerCase().includes(query);
-        } else if (farm.crops) {
-            cropsMatch = String(farm.crops).toLowerCase().includes(query);
-        }
-
-        return nameMatch || provinceMatch || cropsMatch;
-    });
-
-    renderFarmsGrid(filtered);
+    status.textContent = "Finding your location...";
+    navigator.geolocation.getCurrentPosition(
+        (pos) => {
+            userPos = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+            status.textContent = "Showing the farms closest to you.";
+            renderFarmsGrid(filterFarms($("#farm-search-input")?.value || ""));
+        },
+        () => { status.textContent = "We couldn't get your location. Please allow location access and try again."; }
+    );
 }
